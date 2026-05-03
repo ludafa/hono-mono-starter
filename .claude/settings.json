@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Bash(pnpm bootstrap)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm test)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm build)",
+      "Bash(pnpm --filter * run *)",
+      "Bash(pnpm --filter @hono-mono-starter/* run *)",
+      "Bash(pnpm --filter @hono-mono-starter/* exec *)",
+      "Bash(pnpm --filter @hono-mono-starter/* dlx shadcn@latest add *)",
+      "Bash(pnpm --filter @hono-mono-starter/* dlx shadcn@latest list *)",
+      "Bash(npx kubb generate)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(curl -s http://localhost:3000/*)",
+      "Bash(curl -s http://localhost:5173/*)"
+    ]
+  }
+}

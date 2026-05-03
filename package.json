@@ -1,0 +1,28 @@
+{
+  "name": "hono-mono-starter",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.27.0",
+  "scripts": {
+    "bootstrap": "pnpm --filter @hono-mono-starter/server run db:generate && pnpm --filter @hono-mono-starter/server run db:migrate && pnpm --filter @hono-mono-starter/server run generate:openapi && pnpm --filter @hono-mono-starter/client run generate:api",
+    "dev:server": "pnpm --filter @hono-mono-starter/server run dev",
+    "dev:client": "pnpm --filter @hono-mono-starter/client run dev",
+    "test": "pnpm -r run test",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "build": "pnpm -r run build"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:rolldown-vite@7.2.5"
+    },
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild"
+    ]
+  },
+  "devDependencies": {
+    "tslib": "^2.8.1"
+  }
+}
