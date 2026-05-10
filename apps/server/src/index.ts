@@ -6,7 +6,9 @@ import { generateOpenAPISpec } from './generate-spec.js';
 // Generate openapi.yml on dev server start
 generateOpenAPISpec(app);
 
-serve({ fetch: app.fetch, port: 3000 }, (info) => {
+const port = Number(process.env.SERVER_PORT ?? 3000);
+
+serve({ fetch: app.fetch, port }, (info) => {
   console.log(`Server running at http://localhost:${info.port}`);
   console.log(`Swagger UI at http://localhost:${info.port}/reference`);
   console.log(`OpenAPI spec at http://localhost:${info.port}/doc`);

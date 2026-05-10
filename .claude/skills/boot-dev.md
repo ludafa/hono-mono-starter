@@ -4,11 +4,11 @@ description: Start the server and client dev processes and verify both are respo
 
 # Boot the dev environment
 
-The server runs on `http://localhost:3000` (Hono via `@hono/node-server`, with `--watch`). The client runs on `http://localhost:5173` (Vite). The client's Vite config proxies `/api/*` to the server, so the browser only ever talks to `:5173`.
+The server defaults to `http://localhost:3000` (Hono via `@hono/node-server`, with `--watch`) and the client to `http://localhost:5173` (Vite). Both ports come from the **root `.env`** (`SERVER_PORT` / `CLIENT_PORT`); change them there if you need to. The client's Vite config proxies `/api/*` to `SERVER_URL`, so the browser only ever talks to the client port.
 
 ## Steps
 
-1. **Verify prerequisites.** If `apps/server/.env` is missing or `apps/client/src/gen/` is missing, run the `bootstrap` skill first.
+1. **Verify prerequisites.** If the root `.env`, `apps/server/.env`, or `apps/client/src/gen/` is missing, run the `bootstrap` skill first.
 
 2. **Start the server in the background:**
    ```bash
@@ -35,4 +35,4 @@ The server runs on `http://localhost:3000` (Hono via `@hono/node-server`, with `
 
 - The server uses `node --import tsx --watch` — code changes auto-reload. No manual restart needed for source edits, but new env vars require a restart.
 - TanStack Router's plugin regenerates `routeTree.gen.ts` on dev start. If the client process is still running, route file changes hot-reload too.
-- On port conflicts (`EADDRINUSE`): find the offender with `lsof -ti :3000` (or `:5173`) and `kill` it. Don't move the server to a new port — the Vite proxy and CORS config both assume `:3000`.
+- On port conflicts (`EADDRINUSE`): find the offender with `lsof -ti :3000` (or `:5173`) and `kill` it. If you must change a port, edit `SERVER_PORT`/`CLIENT_PORT` and `SERVER_URL`/`CLIENT_URL` in the root `.env` together — the Vite proxy and CORS read those values, so they stay consistent.

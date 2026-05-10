@@ -44,4 +44,4 @@ The string `hono-mono-starter` (and `@hono-mono-starter/*`) appears in several p
 
 - This skill is one-shot. After running it once successfully, future Claude sessions don't need it again — the template names are gone.
 - Don't rename folder paths like `apps/server` and `apps/client`. Tooling assumes them.
-- Do not change the SQLite filename (`data.db`) or the dev ports (`3000` / `5173`). They're referenced in CORS, Vite proxy, and OAuth callback config.
+- Don't change the SQLite filename (`data.db`). To change dev ports, edit the root `.env` (`SERVER_PORT`, `CLIENT_PORT`, and the matching `SERVER_URL` / `CLIENT_URL`) — the server, Vite proxy, and CORS all read from there.

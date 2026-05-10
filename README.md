@@ -14,8 +14,9 @@ degit your-org/hono-mono-starter my-app
 cd my-app
 pnpm install
 
-# 2. configure secrets
-cp apps/server/.env.example apps/server/.env
+# 2. configure env files
+cp .env.example .env                                # shared ports + URLs (root)
+cp apps/server/.env.example apps/server/.env        # server-only secrets
 # edit apps/server/.env — at minimum set BETTER_AUTH_SECRET
 
 # 3. bootstrap (drizzle migrate + openapi spec + kubb client)

@@ -64,11 +64,18 @@ These are load-bearing — change them only with the user's explicit go-ahead.
 A fresh checkout requires:
 
 1. `pnpm install`
-2. `cp apps/server/.env.example apps/server/.env` and fill in `BETTER_AUTH_SECRET`
-3. `pnpm bootstrap` (runs drizzle migrate + openapi spec + kubb codegen)
-4. `pnpm dev:server` and `pnpm dev:client` in separate terminals
+2. `cp .env.example .env` (root — shared ports/URLs consumed by both apps)
+3. `cp apps/server/.env.example apps/server/.env` and fill in `BETTER_AUTH_SECRET`
+4. `pnpm bootstrap` (runs drizzle migrate + openapi spec + kubb codegen)
+5. `pnpm dev:server` and `pnpm dev:client` in separate terminals
 
 The `bootstrap` skill walks Claude through this and surfaces typical first-run errors.
+
+### Env file layout
+
+- **`<repo>/.env`** — shared values both apps need to agree on: `SERVER_PORT`, `CLIENT_PORT`, `SERVER_URL`, `CLIENT_URL`. The server loads this via `node --env-file-if-exists=../../.env`; the client reads it in `vite.config.ts` via `loadEnv(mode, '<repo root>', '')` and goes through Vite's proxy in dev (so the client uses relative `/api/*` paths). better-auth's trusted origins are derived from `CLIENT_URL` (or `CLIENT_PORT`) directly — there is no separate `TRUSTED_ORIGINS` knob.
+- **`apps/server/.env`** — server-only secrets: `BETTER_AUTH_SECRET`, `GITHUB_CLIENT_ID/SECRET`. Loaded after the root file so it can override shared keys if you ever need to.
+- The client never reads `apps/server/.env`. Vite's bundle only exposes `VITE_*` vars, so server secrets cannot leak into the client even if the file were widened.
 
 ## Documentation
 

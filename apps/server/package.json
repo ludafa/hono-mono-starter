@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --env-file=.env --import tsx --watch src/index.ts",
-    "start": "node --env-file=.env.production --import tsx src/index.ts",
+    "dev": "node --env-file-if-exists=../../.env --env-file-if-exists=.env --import tsx --watch src/index.ts",
+    "start": "node --env-file-if-exists=../../.env.production --env-file-if-exists=.env.production --import tsx src/index.ts",
     "generate:openapi": "tsx scripts/generate-openapi.ts",
     "build": "pnpm run generate:openapi && tsc --noEmit",
     "typecheck": "tsc --noEmit",

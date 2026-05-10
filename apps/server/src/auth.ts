@@ -3,8 +3,13 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 
 import { db } from './db/instance.js';
 
+const clientUrl =
+  process.env.CLIENT_URL ?? `http://localhost:${process.env.CLIENT_PORT ?? 5173}`;
+
+const trustedOrigins = [clientUrl];
+
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL ?? 'http://localhost:3000',
+  baseURL: process.env.SERVER_URL ?? 'http://localhost:3000',
   database: drizzleAdapter(db, { provider: 'sqlite' }),
   emailAndPassword: {
     enabled: true,
@@ -18,8 +23,5 @@ export const auth = betterAuth({
         },
       }
     : undefined,
-  trustedOrigins:
-    process.env.TRUSTED_ORIGINS ?
-      process.env.TRUSTED_ORIGINS.split(',')
-    : ['http://localhost:5173'],
+  trustedOrigins,
 });

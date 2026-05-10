@@ -16,13 +16,22 @@ export function AppLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="bg-background min-h-screen">
-      <header className="border-foreground/10 bg-background/85 sticky top-0 z-20 border-b backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
-          <Link to="/" className="text-lg font-semibold tracking-tight">
-            Hono Mono Starter
+    <div className="bg-background text-foreground min-h-screen">
+      <header className="border-foreground/8 bg-background/75 sticky top-0 z-20 border-b backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5 sm:px-8">
+          <Link
+            to="/"
+            className="flex items-baseline gap-1.5 text-base tracking-tight"
+          >
+            <span className="font-display text-lg leading-none italic">
+              hono
+            </span>
+            <span className="text-muted-foreground/70 leading-none">·</span>
+            <span className="text-muted-foreground leading-none lowercase">
+              mono
+            </span>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {session?.user && (
               <span className="text-muted-foreground hidden text-xs sm:inline">
                 {session.user.email}
@@ -37,7 +46,11 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
+      <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8 sm:py-14">
+        <div className="animate-in fade-in slide-in-from-bottom-1 fill-mode-backwards duration-500">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }

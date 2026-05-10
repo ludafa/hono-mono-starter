@@ -7,12 +7,16 @@ import { exampleApp } from './routes/example.js';
 
 const app = new OpenAPIHono();
 
-// CORS for client dev server.
-// Replace this list when you deploy or add other client origins.
+// CORS for client dev server. Derived from CLIENT_URL, falling back to
+// CLIENT_PORT (matches vite.config.ts's same-named fallback).
+const clientUrl =
+  process.env.CLIENT_URL ?? `http://localhost:${process.env.CLIENT_PORT ?? 5173}`;
+const corsOrigins = [clientUrl];
+
 app.use(
   '/api/*',
   cors({
-    origin: (process.env.TRUSTED_ORIGINS ?? 'http://localhost:5173').split(','),
+    origin: corsOrigins,
     credentials: true,
   }),
 );
