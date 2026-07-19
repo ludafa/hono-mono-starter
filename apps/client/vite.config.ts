@@ -39,8 +39,11 @@ export default defineConfig(({ mode }) => {
     },
     // In dev, leave VITE_API_URL unset so the client uses relative `/api/*`
     // paths and goes through the proxy above (same-origin, no CORS preflight).
-    define: isDev ? {} : {
-      'import.meta.env.VITE_API_URL': JSON.stringify(serverUrl),
-    },
+    define:
+      isDev ?
+        {}
+      : {
+          'import.meta.env.VITE_API_URL': JSON.stringify(serverUrl),
+        },
   };
 });
