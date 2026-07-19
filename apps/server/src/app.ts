@@ -10,7 +10,8 @@ const app = new OpenAPIHono();
 // CORS for client dev server. Derived from CLIENT_URL, falling back to
 // CLIENT_PORT (matches vite.config.ts's same-named fallback).
 const clientUrl =
-  process.env.CLIENT_URL ?? `http://localhost:${process.env.CLIENT_PORT ?? 5173}`;
+  process.env.CLIENT_URL ??
+  `http://localhost:${process.env.CLIENT_PORT ?? 5173}`;
 const corsOrigins = [clientUrl];
 
 app.use(

@@ -7,7 +7,7 @@ Guidance for Claude Code working in projects derived from `hono-mono-starter`.
 A pnpm monorepo with two apps:
 
 - **`apps/server`** — Hono + `@hono/zod-openapi` + better-auth + Drizzle (SQLite). Source of truth for the API contract. Generates `openapi.yml`.
-- **`apps/client`** — Vite (rolldown-vite) + React 19 + TanStack Router (file-based) + Tailwind v4 + shadcn/ui. Consumes the API via Kubb-generated typed clients (`src/gen/`).
+- **`apps/client`** — Vite 8 (Rolldown-powered) + React 19 + TanStack Router (file-based) + Tailwind v4 + shadcn/ui. Consumes the API via Kubb-generated typed clients (`src/gen/`).
 
 Module type: ESM. Package manager: pnpm. Node imports use `.js` extensions for TS (`verbatimModuleSyntax` is on).
 
@@ -47,7 +47,7 @@ These are load-bearing — change them only with the user's explicit go-ahead.
 - **Routes are file-based.** The TanStack Router Vite plugin rewrites `src/routeTree.gen.ts` whenever route files change. Don't hand-edit `routeTree.gen.ts`. Don't reintroduce the imperative `createRouter`/`createRoute` style.
 - **Auth guards live in `_app.tsx` / `_auth.tsx`.** `beforeLoad` does a `authClient.getSession()` and `redirect(...)` based on whether a session exists. Page components do not re-check.
 - **API access goes through `src/gen/clients`.** Never `fetch('/api/...')` directly — Kubb-generated functions carry types and credentials. If a function you need doesn't exist, regenerate (see `regen-api-client` skill) or add the missing route on the server first.
-- **Vite is `rolldown-vite`** (pinned via `package.json#pnpm.overrides`). Build/bundle bugs may differ from upstream Vite docs.
+- **Vite is real `vite@8`** — Vite 8 ships Rolldown (bundler) + Oxc (transformer) natively, so the old `rolldown-vite` package and its `overrides` pin are gone. There is no `vite` override in `pnpm-workspace.yaml` anymore; the client depends on `vite@^8` directly.
 - **Tailwind v4 is CSS-first.** No `tailwind.config.*`. Theme tokens are CSS custom properties in `src/main.css`. Add new tokens under both `:root` and `.dark`.
 - **`main.css` is loaded via `<link>` in `index.html`**, not via `import` from `main.tsx`. Don't change that — the cold-load FOUC story relies on it.
 - **shadcn config:** `components.json` aliases `@/components`, `@/components/ui`, `@/lib/utils`, `@/hooks`. New shadcn components install into `src/components/ui/`.

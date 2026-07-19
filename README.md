@@ -3,7 +3,7 @@
 Opinionated full-stack TypeScript monorepo:
 
 - **`apps/server`** — Hono + `@hono/zod-openapi` (OpenAPI 3.1 generated from Zod schemas) + Swagger UI + better-auth + Drizzle (SQLite) + Vitest.
-- **`apps/client`** — Vite (rolldown-vite) + React 19 + TanStack Router (file-based, plugin-generated tree) + TanStack Form / Table / Virtual + Tailwind v4 (CSS-first) + shadcn/ui + Kubb (typed clients generated from the server's `openapi.yml`).
+- **`apps/client`** — Vite 8 (Rolldown-powered) + React 19 + TanStack Router (file-based, plugin-generated tree) + TanStack Form / Table / Virtual + Tailwind v4 (CSS-first) + shadcn/ui + Kubb (typed clients generated from the server's `openapi.yml`).
 - Shared ESLint + Prettier + TypeScript strict mode in each workspace package.
 
 ## Quick start
@@ -90,7 +90,7 @@ apps/
 - **OpenAPI is the contract.** `openapi.yml` is committed; the client never imports server code directly. Touch a route → regenerate.
 - **Auth guards live in route layouts.** `_app.tsx` redirects unauthenticated users to `/login`; `_auth.tsx` redirects already-logged-in users to `/`. Don't re-check sessions in pages.
 - **Tailwind v4 is CSS-first.** No `tailwind.config.*`. Theme tokens live in `src/main.css` under `:root` / `.dark`.
-- **`vite` is `rolldown-vite`.** Pinned via `package.json#pnpm.overrides`. When debugging build/bundle issues, the underlying bundler is Rolldown.
+- **`vite` is real Vite 8.** Vite 8 ships Rolldown (bundler) + Oxc (transformer) natively, so there's no `rolldown-vite` package or override anymore. When debugging build/bundle issues, the underlying bundler is Rolldown.
 - **Strict ESLint.** Lint runs with `--max-warnings 0`; CI fails on any warning. `simple-import-sort` rewrites import order — let the linter own it.
 
 ## Claude Code

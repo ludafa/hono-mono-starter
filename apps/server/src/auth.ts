@@ -4,7 +4,8 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from './db/instance.js';
 
 const clientUrl =
-  process.env.CLIENT_URL ?? `http://localhost:${process.env.CLIENT_PORT ?? 5173}`;
+  process.env.CLIENT_URL ??
+  `http://localhost:${process.env.CLIENT_PORT ?? 5173}`;
 
 const trustedOrigins = [clientUrl];
 
