@@ -4,7 +4,9 @@ import { useState } from 'react';
 type Theme = 'light' | 'dark';
 
 function readInitialTheme(): Theme {
-  if (typeof document === 'undefined') return 'light';
+  if (typeof document === 'undefined') {
+    return 'light';
+  }
   return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }
 
@@ -29,7 +31,7 @@ export function ThemeToggle() {
       aria-label={
         theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
       }
-      className="text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground inline-flex size-8 items-center justify-center rounded-md transition-colors"
+      className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
     >
       <Icon
         icon={theme === 'dark' ? 'solar:sun-2-linear' : 'solar:moon-linear'}

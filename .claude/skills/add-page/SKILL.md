@@ -1,4 +1,5 @@
 ---
+name: add-page
 description: Add a TanStack Router file-based page to the client app, wiring it under the right layout (authenticated vs public). Use when the user asks to "add a page", "create a route at /foo", or "add a screen for X".
 ---
 
@@ -24,6 +25,7 @@ Two layouts decide auth behavior:
    ```tsx
    // apps/client/src/routes/_app/projects.tsx
    import { createFileRoute } from '@tanstack/react-router';
+
    import { ProjectListPage } from '../../pages/project-list';
 
    export const Route = createFileRoute('/_app/projects')({
@@ -36,6 +38,7 @@ Two layouts decide auth behavior:
    ```tsx
    // apps/client/src/routes/_app/projects.$projectId.tsx
    import { createFileRoute } from '@tanstack/react-router';
+
    import { ProjectDetailPage } from '../../pages/project-detail';
 
    export const Route = createFileRoute('/_app/projects/$projectId')({

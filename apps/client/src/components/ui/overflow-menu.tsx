@@ -22,7 +22,7 @@ export function OverflowMenu({
       <Menu.Trigger
         aria-label={label}
         className={cn(
-          'border-foreground/10 bg-card text-muted-foreground inline-flex h-8 w-8 items-center justify-center rounded-md border transition-colors',
+          'inline-flex h-8 w-8 items-center justify-center rounded-md border border-foreground/10 bg-card text-muted-foreground transition-colors',
           'hover:border-foreground/20 hover:bg-foreground/[0.02] hover:text-foreground',
           'data-[popup-open]:border-foreground/30 data-[popup-open]:bg-foreground/[0.02] data-[popup-open]:text-foreground',
           className,
@@ -34,7 +34,7 @@ export function OverflowMenu({
         <Menu.Positioner sideOffset={6} align="end">
           <Menu.Popup
             className={cn(
-              'border-foreground/10 bg-card shadow-foreground/5 z-50 min-w-48 overflow-hidden rounded-xl border py-1 shadow-lg outline-none',
+              'z-50 min-w-48 overflow-hidden rounded-xl border border-foreground/10 bg-card py-1 shadow-lg shadow-foreground/5 outline-none',
               'transition-[transform,opacity] duration-150',
               'data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
               'data-[ending-style]:scale-95 data-[ending-style]:opacity-0',
@@ -69,12 +69,12 @@ export function OverflowMenuItem({
       disabled={disabled}
       className={cn(
         'flex cursor-default items-center gap-2.5 px-3 py-1.5 text-xs outline-none select-none',
-        'data-[highlighted]:bg-foreground/[0.05] transition-colors',
+        'transition-colors data-[highlighted]:bg-foreground/[0.05]',
         disabled && 'pointer-events-none opacity-50',
         destructive ? 'text-destructive' : 'text-foreground',
       )}
     >
-      {icon && <Icon icon={icon} className="text-muted-foreground size-3.5" />}
+      {icon && <Icon icon={icon} className="size-3.5 text-muted-foreground" />}
       <span className="flex-1">{children}</span>
     </Menu.Item>
   );

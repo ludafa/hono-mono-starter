@@ -1,4 +1,5 @@
 ---
+name: add-db-table
 description: Add a new Drizzle (SQLite) table and apply the migration. Use when the user asks to "add a table", "add a model", or to persist a new entity. Do NOT touch the better-auth tables (user, session, account, verification).
 ---
 

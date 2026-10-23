@@ -1,4 +1,5 @@
 ---
+name: bootstrap
 description: First-run setup for a fresh checkout — copies env files, generates and applies the Drizzle migration, emits openapi.yml, and generates the Kubb client. Triggers on phrases like "bootstrap", "first run", "set up the project", "I just cloned this", or when commands fail because src/gen/ or routeTree.gen.ts are missing.
 ---
 

@@ -44,7 +44,7 @@ export function LoginPage() {
         <h1 className="font-display text-4xl leading-[1.05] tracking-tight">
           Welcome <span className="italic">back</span>.
         </h1>
-        <p className="text-muted-foreground text-sm leading-relaxed">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           Sign in to continue to your workspace.
         </p>
       </header>
@@ -53,7 +53,7 @@ export function LoginPage() {
         <div className="space-y-1.5">
           <label
             htmlFor="email"
-            className="text-muted-foreground text-[0.7rem] font-medium tracking-[0.16em] uppercase"
+            className="text-[0.7rem] font-medium tracking-[0.16em] text-muted-foreground uppercase"
           >
             Email
           </label>
@@ -64,13 +64,13 @@ export function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="border-foreground/15 focus:border-foreground w-full border-0 border-b bg-transparent py-2 text-base transition-colors focus:ring-0 focus:outline-none"
+            className="w-full border-0 border-b border-foreground/15 bg-transparent py-2 text-base transition-colors focus:border-foreground focus:ring-0 focus:outline-none"
           />
         </div>
         <div className="space-y-1.5">
           <label
             htmlFor="password"
-            className="text-muted-foreground text-[0.7rem] font-medium tracking-[0.16em] uppercase"
+            className="text-[0.7rem] font-medium tracking-[0.16em] text-muted-foreground uppercase"
           >
             Password
           </label>
@@ -81,11 +81,11 @@ export function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="border-foreground/15 focus:border-foreground w-full border-0 border-b bg-transparent py-2 text-base transition-colors focus:ring-0 focus:outline-none"
+            className="w-full border-0 border-b border-foreground/15 bg-transparent py-2 text-base transition-colors focus:border-foreground focus:ring-0 focus:outline-none"
           />
         </div>
         {error && (
-          <p className="text-destructive animate-in fade-in slide-in-from-top-1 text-sm duration-200">
+          <p className="animate-in text-sm text-destructive duration-200 fade-in slide-in-from-top-1">
             {error}
           </p>
         )}
@@ -95,11 +95,11 @@ export function LoginPage() {
       </form>
 
       <div className="relative flex items-center gap-3">
-        <span className="bg-foreground/10 h-px flex-1" />
-        <span className="text-muted-foreground text-[0.7rem] tracking-[0.16em] uppercase">
+        <span className="h-px flex-1 bg-foreground/10" />
+        <span className="text-[0.7rem] tracking-[0.16em] text-muted-foreground uppercase">
           or
         </span>
-        <span className="bg-foreground/10 h-px flex-1" />
+        <span className="h-px flex-1 bg-foreground/10" />
       </div>
 
       <Button
@@ -111,11 +111,11 @@ export function LoginPage() {
         Continue with GitHub
       </Button>
 
-      <p className="text-muted-foreground text-center text-xs">
+      <p className="text-center text-xs text-muted-foreground">
         New here?{' '}
         <Link
           to="/register"
-          className="text-foreground decoration-foreground/30 hover:decoration-foreground underline underline-offset-4 transition-colors"
+          className="text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:decoration-foreground"
         >
           Create an account
         </Link>

@@ -4,7 +4,7 @@ Opinionated full-stack TypeScript monorepo:
 
 - **`apps/server`** — Hono + `@hono/zod-openapi` (OpenAPI 3.1 generated from Zod schemas) + Swagger UI + better-auth + Drizzle (SQLite) + Vitest.
 - **`apps/client`** — Vite 8 (Rolldown-powered) + React 19 + TanStack Router (file-based, plugin-generated tree) + TanStack Form / Table / Virtual + Tailwind v4 (CSS-first) + shadcn/ui + Kubb (typed clients generated from the server's `openapi.yml`).
-- Shared ESLint + Prettier + TypeScript strict mode in each workspace package.
+- One repo-wide Oxlint + Oxfmt setup (Oxc, the same Rust toolchain Vite 8 builds on) + TypeScript strict mode.
 
 ## Quick start
 
@@ -47,7 +47,7 @@ apps/
 │   │   └── schemas/api.ts     ErrorSchema, PaginationSchema (shared)
 │   ├── scripts/generate-openapi.ts
 │   ├── drizzle.config.ts      SQLite-only, points at db/schema.ts
-│   ├── eslint.config.js, .prettierrc, vitest.config.ts, tsconfig.json
+│   ├── vitest.config.ts, tsconfig.json
 │   └── openapi.yml            generated, COMMITTED (consumed by client codegen)
 └── client/
     ├── src/
@@ -72,18 +72,18 @@ apps/
     ├── vite.config.ts         + rolldown override + TanStack Router plugin
     ├── kubb.config.ts         OpenAPI → ts/zod/fetch clients
     ├── components.json        shadcn alias config
-    └── eslint.config.js, .prettierrc, tsconfig.{json,app,node}
+    └── tsconfig.{json,app,node}
 ```
 
 ## Common tasks
 
-| Goal | Command |
-|------|---------|
-| Add a new API endpoint | Add a `createRoute(...)` in `apps/server/src/routes/<resource>.ts`, mount in `app.ts`, then `pnpm bootstrap` (or just the last two steps of it) |
-| Add a DB table | Edit `apps/server/src/db/schema.ts`, then `pnpm --filter @hono-mono-starter/server db:generate && pnpm --filter @hono-mono-starter/server db:migrate` |
-| Add a UI page | Create `apps/client/src/pages/foo.tsx`, then add a route file under `apps/client/src/routes/_app/` (the dev server's TanStack Router plugin will rebuild `routeTree.gen.ts`) |
-| Add a shadcn component | `pnpm --filter @hono-mono-starter/client dlx shadcn@latest add <name>` |
-| Refresh the typed API client | `pnpm --filter @hono-mono-starter/server generate:openapi && pnpm --filter @hono-mono-starter/client generate:api` |
+| Goal                         | Command                                                                                                                                                                      |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Add a new API endpoint       | Add a `createRoute(...)` in `apps/server/src/routes/<resource>.ts`, mount in `app.ts`, then `pnpm bootstrap` (or just the last two steps of it)                              |
+| Add a DB table               | Edit `apps/server/src/db/schema.ts`, then `pnpm --filter @hono-mono-starter/server db:generate && pnpm --filter @hono-mono-starter/server db:migrate`                        |
+| Add a UI page                | Create `apps/client/src/pages/foo.tsx`, then add a route file under `apps/client/src/routes/_app/` (the dev server's TanStack Router plugin will rebuild `routeTree.gen.ts`) |
+| Add a shadcn component       | `pnpm --filter @hono-mono-starter/client dlx shadcn@latest add <name>`                                                                                                       |
+| Refresh the typed API client | `pnpm --filter @hono-mono-starter/server generate:openapi && pnpm --filter @hono-mono-starter/client generate:api`                                                           |
 
 ## Conventions
 
@@ -91,7 +91,7 @@ apps/
 - **Auth guards live in route layouts.** `_app.tsx` redirects unauthenticated users to `/login`; `_auth.tsx` redirects already-logged-in users to `/`. Don't re-check sessions in pages.
 - **Tailwind v4 is CSS-first.** No `tailwind.config.*`. Theme tokens live in `src/main.css` under `:root` / `.dark`.
 - **`vite` is real Vite 8.** Vite 8 ships Rolldown (bundler) + Oxc (transformer) natively, so there's no `rolldown-vite` package or override anymore. When debugging build/bundle issues, the underlying bundler is Rolldown.
-- **Strict ESLint.** Lint runs with `--max-warnings 0`; CI fails on any warning. `simple-import-sort` rewrites import order — let the linter own it.
+- **Oxlint + Oxfmt, configured once at the root.** `.oxlintrc.json` and `.oxfmtrc.json` cover both apps. `pnpm lint` runs `oxlint`, `oxfmt --check` and `pnpm docs:check` (doc index and references) and fails on any warning; `pnpm format` (`scripts/format.sh`) applies oxlint's safe fixes and then formats (same as saving in the editor); `pnpm lint:fix` does that and reports what's left. A husky pre-commit hook runs the same script on staged files via lint-staged. Oxfmt sorts imports and Tailwind classes — let the formatter own them.
 
 ## Claude Code
 

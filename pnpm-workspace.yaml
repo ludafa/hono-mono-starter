@@ -1,6 +1,6 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - "apps/*"
+  - "packages/*"
 
 # pnpm v11 replaced onlyBuiltDependencies/neverBuiltDependencies with the
 # allowBuilds map (pkg: true|false). `pnpm approve-builds` edits this list.
@@ -14,4 +14,3 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - hono@4.12.31
-  - eslint@10.8.0
