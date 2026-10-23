@@ -91,7 +91,7 @@ apps/
 - **Auth guards live in route layouts.** `_app.tsx` redirects unauthenticated users to `/login`; `_auth.tsx` redirects already-logged-in users to `/`. Don't re-check sessions in pages.
 - **Tailwind v4 is CSS-first.** No `tailwind.config.*`. Theme tokens live in `src/main.css` under `:root` / `.dark`.
 - **`vite` is real Vite 8.** Vite 8 ships Rolldown (bundler) + Oxc (transformer) natively, so there's no `rolldown-vite` package or override anymore. When debugging build/bundle issues, the underlying bundler is Rolldown.
-- **Oxlint + Oxfmt, configured once at the root.** `.oxlintrc.json` and `.oxfmtrc.json` cover both apps. `pnpm lint` runs `oxlint` and `oxfmt --check` and fails on any warning; `pnpm format` (`scripts/format.sh`) applies oxlint's safe fixes and then formats (same as saving in the editor); `pnpm lint:fix` does that and reports what's left. A husky pre-commit hook runs the same script on staged files via lint-staged. Oxfmt sorts imports and Tailwind classes — let the formatter own them.
+- **Oxlint + Oxfmt, configured once at the root.** `.oxlintrc.json` and `.oxfmtrc.json` cover both apps. `pnpm lint` runs `oxlint`, `oxfmt --check` and `pnpm docs:check` (doc index and references) and fails on any warning; `pnpm format` (`scripts/format.sh`) applies oxlint's safe fixes and then formats (same as saving in the editor); `pnpm lint:fix` does that and reports what's left. A husky pre-commit hook runs the same script on staged files via lint-staged. Oxfmt sorts imports and Tailwind classes — let the formatter own them.
 
 ## Claude Code
 

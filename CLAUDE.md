@@ -11,15 +11,26 @@ A pnpm monorepo with two apps:
 
 Module type: ESM. Package manager: pnpm. Node imports use `.js` extensions for TS (`verbatimModuleSyntax` is on).
 
-## On startup
+## 文档
 
-If `apps/docs/` has any files, run the **`read-docs`** skill before doing other work. It is intentionally light — the directory may be empty in a fresh template.
+设计和施工记录在 `apps/docs/`，按功能模块组织。动手改某个功能前，先看索引 `apps/docs/README.md`，再打开对应模块的 `README.md`，按需读里面的 `product.md` / `tech.md` / `plan.md` / `verification.md` / `probe-*.md`；不要整目录通读。
+
+写或更新文档时用 `feature-docs` skill。已有章节的编号不改（代码注释靠编号引用）；新功能的章节追加在文档末尾，编号取最大编号 + 1。改了模块 `README.md` 的头部后运行 `pnpm docs:index` 重新生成索引（`pnpm lint` 会检查）。
+
+## 代码注释
+
+功能、实现思路、设计理由、施工过程都只写在 `apps/docs/` 里，注释里不写。同一件事如果在文档和注释里各写一份，迟早会有一份过时。
+
+- 需要说明时，注释里只写一行指向文档的引用，格式固定为 `See apps/docs/<模块>/<文件>.md §<章节>`，例如 `// See apps/docs/lint-format/tech.md §5.`。文档里还没有这段内容，就先补进文档，再写引用。
+- 以下内容可以留在代码里：给工具看的指令，例如 `oxlint-disable-next-line`、`@ts-expect-error`，后面跟一句原因；以及 `TODO(<日期>)`。
+- 现有代码里已经有不少说明性注释，暂时不批量清理。改到哪一段，就把那一段的说明挪进对应文档，在原处换成引用。
+- 移动或重命名文档时，用 `grep -rn "apps/docs/" apps scripts .claude *.json *.md` 找出所有引用一起改；`pnpm docs:check-refs` 会报出失效的引用和链接。
 
 ## Skills available
 
 The `.claude/skills/` directory ships with skills for the most common tasks. Each skill describes a workflow you should follow exactly when its trigger fires. Each skill is a folder `.claude/skills/<name>/SKILL.md` with `name` + `description` frontmatter — a flat `.claude/skills/<name>.md` file is not picked up by Claude Code.
 
-- `read-docs` — read `apps/docs/{features,solutions,decisions}/` at session start
+- `feature-docs` — write or update docs under `apps/docs/` (module layout, frontmatter, section numbering, writing style)
 - `bootstrap` — first-run setup (env file, drizzle migrate, openapi spec, kubb client)
 - `add-api-endpoint` — full server-to-client endpoint flow, including codegen refresh
 - `add-db-table` — add a Drizzle table and run `db:generate` + `db:migrate`
@@ -63,7 +74,7 @@ These are load-bearing — change them only with the user's explicit go-ahead.
 - **Commit message 用 [Conventional Commits](https://www.conventionalcommits.org/)。** `type(scope): subject` —— `feat` / `fix` / `docs` / `refactor` / `chore` / `test` / `build` / `ci`。scope 用受影响的包（`server` / `client` / `docs`），跨多包或全局改动可省略。一次 commit 只做一件事。
 - **格式由 commitlint 机器兜底。** 根 `commitlint.config.js`（`@commitlint/config-conventional`）+ husky 的 `.husky/commit-msg` 钩子会在每次提交时校验 message，格式不对直接拦下。`.husky/pre-commit` 用 lint-staged 对暂存文件跑 `scripts/format.sh`，只修复和格式化，不跑测试；加了 `--no-stash`，不碰共用的 stash 列表，开头那行 "might result in data loss" 警告可以忽略（见 [`apps/docs/lint-format/tech.md` §9](apps/docs/lint-format/tech.md#9-pre-commit-钩子2026-10-22)）。**不要用 `--no-verify` 绕过钩子。**
 - **钩子对 clone 者自动生效。** 根 `package.json` 的 `"prepare": "husky"` 在 `pnpm install` 后自动激活 husky，无需手动 `husky init`。CI 里若因 `--ignore-scripts` 报错，设 `HUSKY=0` 禁用即可。husky 属于**根** `package.json`，不装进子包。
-- **版本与 changelog 暂不由提交流程管理。** 本仓库三个包都是 `private: true` 的应用，不发 registry，故**没有引入 changesets**——commit message 只影响历史可读性，不决定版本号。若将来在 `packages/*` 放要发布的包，再评估是否引入 changesets（见 `apps/docs/decisions/0002-commit-workflow-commitlint-no-changesets.md`）。
+- **版本与 changelog 暂不由提交流程管理。** 本仓库三个包都是 `private: true` 的应用，不发 registry，故**没有引入 changesets**——commit message 只影响历史可读性，不决定版本号。若将来在 `packages/*` 放要发布的包，再评估是否引入 changesets（见 [`apps/docs/commit-workflow/`](apps/docs/commit-workflow/README.md)）。
 - **提交流程由 slash command 驱动：**
   - `/commit` —— 分析已 staged 的改动、确定 type/scope、写 message、提交（不自作主张 `git add` 全部）。
   - `/split-commits` —— 把攒在工作区的一坨改动拆成多个语义清晰的 commit（`git add -p` 分批 stage）。
@@ -86,13 +97,3 @@ The `bootstrap` skill walks Claude through this and surfaces typical first-run e
 - **`<repo>/.env`** — shared values both apps need to agree on: `SERVER_PORT`, `CLIENT_PORT`, `SERVER_URL`, `CLIENT_URL`. The server loads this via `node --env-file-if-exists=../../.env`; the client reads it in `vite.config.ts` via `loadEnv(mode, '<repo root>', '')` and goes through Vite's proxy in dev (so the client uses relative `/api/*` paths). better-auth's trusted origins are derived from `CLIENT_URL` (or `CLIENT_PORT`) directly — there is no separate `TRUSTED_ORIGINS` knob.
 - **`apps/server/.env`** — server-only secrets: `BETTER_AUTH_SECRET`, `GITHUB_CLIENT_ID/SECRET`. Loaded after the root file so it can override shared keys if you ever need to.
 - The client never reads `apps/server/.env`. Vite's bundle only exposes `VITE_*` vars, so server secrets cannot leak into the client even if the file were widened.
-
-## Documentation
-
-Every conversation that introduces a feature or non-trivial solution should produce or update a doc in `apps/docs/`:
-
-- `apps/docs/features/<name>.md` — what it does, user-facing behavior
-- `apps/docs/solutions/<topic>.md` — algorithms, data flow, integration patterns
-- `apps/docs/decisions/NNNN-<title>.md` — ADRs
-
-Keep docs concise (1–2 pages), reference source paths, and update existing docs rather than duplicating.

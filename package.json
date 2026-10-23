@@ -9,9 +9,12 @@
     "dev:server": "pnpm --filter @hono-mono-starter/server run dev",
     "dev:client": "pnpm --filter @hono-mono-starter/client run dev",
     "test": "pnpm -r run test",
-    "lint": "oxlint && oxfmt --check",
+    "lint": "oxlint && oxfmt --check && pnpm docs:check",
     "lint:fix": "pnpm format && oxlint",
     "format": "sh scripts/format.sh",
+    "docs:index": "node scripts/docs/index.mjs",
+    "docs:check-refs": "node scripts/docs/check-refs.mjs",
+    "docs:check": "node scripts/docs/index.mjs --check && node scripts/docs/check-refs.mjs",
     "typecheck": "pnpm -r run typecheck",
     "build": "pnpm -r run build",
     "prepare": "husky"
@@ -23,7 +26,8 @@
     "lint-staged": "^17.6.0",
     "oxfmt": "^0.74.0",
     "oxlint": "^1.89.0",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "zod": "^4.4.3"
   },
   "lint-staged": {
     "*": "sh scripts/format.sh"
