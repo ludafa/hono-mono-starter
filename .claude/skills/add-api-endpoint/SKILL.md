@@ -1,4 +1,5 @@
 ---
+name: add-api-endpoint
 description: Add a new HTTP endpoint to the server, expose it in OpenAPI, and refresh the typed client. Use when the user asks to "add an endpoint", "add a route", "expose X over the API", or to add CRUD for a resource.
 ---
 

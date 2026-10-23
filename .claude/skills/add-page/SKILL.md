@@ -1,4 +1,5 @@
 ---
+name: add-page
 description: Add a TanStack Router file-based page to the client app, wiring it under the right layout (authenticated vs public). Use when the user asks to "add a page", "create a route at /foo", or "add a screen for X".
 ---
 

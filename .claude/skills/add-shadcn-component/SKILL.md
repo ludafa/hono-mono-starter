@@ -1,4 +1,5 @@
 ---
+name: add-shadcn-component
 description: Install a shadcn/ui primitive into apps/client/src/components/ui/. Use when the user asks for a shadcn component ("add a Sheet", "install the dropdown-menu", "I need a sonner toast").
 ---
 

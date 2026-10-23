@@ -1,4 +1,5 @@
 ---
+name: rename-template
 description: Rename the template from `hono-mono-starter` and `@hono-mono-starter/*` to a new project name. Use right after the user clones/degits the template ("rename this to <my-app>", "I just made a new project from this template, change the names").
 ---
 
@@ -26,7 +27,7 @@ The string `hono-mono-starter` (and `@hono-mono-starter/*`) appears in several p
    | `README.md`                               | top heading + every `@hono-mono-starter/*` reference                 |
    | `CLAUDE.md`                               | every `@hono-mono-starter/*` reference                               |
    | `.claude/settings.json`                   | `Bash(pnpm --filter @hono-mono-starter/* …)` patterns                |
-   | `.claude/skills/*.md`                     | every `@hono-mono-starter/*` and `hono-mono-starter` mention         |
+   | `.claude/skills/*/SKILL.md`               | every `@hono-mono-starter/*` and `hono-mono-starter` mention         |
 
 3. **Search for stragglers:**
 

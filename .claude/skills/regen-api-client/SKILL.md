@@ -1,4 +1,5 @@
 ---
+name: regen-api-client
 description: Regenerate openapi.yml on the server and the Kubb-generated typed client on the client. Use after any change to a server route or any Zod schema with `.openapi('Name')`. Triggers when the user says "regenerate the client", "the API client is out of date", or when type errors point to missing functions in src/gen/clients.
 ---
 

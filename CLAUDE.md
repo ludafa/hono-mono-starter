@@ -17,7 +17,7 @@ If `apps/docs/` has any files, run the **`read-docs`** skill before doing other 
 
 ## Skills available
 
-The `.claude/skills/` directory ships with skills for the most common tasks. Each skill describes a workflow you should follow exactly when its trigger fires:
+The `.claude/skills/` directory ships with skills for the most common tasks. Each skill describes a workflow you should follow exactly when its trigger fires. Each skill is a folder `.claude/skills/<name>/SKILL.md` with `name` + `description` frontmatter — a flat `.claude/skills/<name>.md` file is not picked up by Claude Code.
 
 - `read-docs` — read `apps/docs/{features,solutions,decisions}/` at session start
 - `bootstrap` — first-run setup (env file, drizzle migrate, openapi spec, kubb client)

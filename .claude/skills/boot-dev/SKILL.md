@@ -1,4 +1,5 @@
 ---
+name: boot-dev
 description: Start the server and client dev processes and verify both are responding. Use when the user asks to "run the app", "start the dev server", "boot it up", or wants to manually QA a change.
 ---
 
