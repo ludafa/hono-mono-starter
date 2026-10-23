@@ -54,14 +54,14 @@ These are load-bearing — change them only with the user's explicit go-ahead.
 
 ### Tooling
 
-- **Code style is automated — don't spend effort on it.** A PostToolUse hook runs `scripts/format.sh` (`oxlint --fix` + `oxfmt`) on every file you edit (formatting, import/Tailwind order, `curly`, `one-var`). `pnpm format` does the same repo-wide. Config lives only in the root `.oxlintrc.json` / `.oxfmtrc.json`; client-only rules go in the `apps/client/**` override. Rationale: [`apps/docs/lint-format/`](apps/docs/lint-format/README.md).
+- **Code style is automated — don't spend effort on it.** A PostToolUse hook runs `scripts/format.sh` (`oxlint --fix` + `oxfmt`) on every file you edit (formatting, import/Tailwind order, `curly`, `one-var`). `pnpm format` does the same repo-wide, and the pre-commit hook does it for staged files. Config lives only in the root `.oxlintrc.json` / `.oxfmtrc.json`; client-only rules go in the `apps/client/**` override. Rationale: [`apps/docs/lint-format/`](apps/docs/lint-format/README.md).
 - **Before finishing, run `pnpm lint` and `pnpm typecheck`** and fix what's left (strict TS with `verbatimModuleSyntax`: use `import type`). Suppress a rule with `// oxlint-disable-next-line <rule>`.
 - **Kubb's `src/gen/**` must stay formatted by oxfmt** (`kubb.config.ts` → `format: 'oxfmt'`); don't add it to `.oxfmtrc.json`'s `ignorePatterns`. Other codegen output (`routeTree.gen.ts`, `drizzle/**`) is ignored by both configs — add new codegen output there too.
 
 ## Git 提交约定
 
 - **Commit message 用 [Conventional Commits](https://www.conventionalcommits.org/)。** `type(scope): subject` —— `feat` / `fix` / `docs` / `refactor` / `chore` / `test` / `build` / `ci`。scope 用受影响的包（`server` / `client` / `docs`），跨多包或全局改动可省略。一次 commit 只做一件事。
-- **格式由 commitlint 机器兜底。** 根 `commitlint.config.js`（`@commitlint/config-conventional`）+ husky 的 `.husky/commit-msg` 钩子会在每次提交时校验 message，格式不对直接拦下。**不要用 `--no-verify` 绕过钩子。**
+- **格式由 commitlint 机器兜底。** 根 `commitlint.config.js`（`@commitlint/config-conventional`）+ husky 的 `.husky/commit-msg` 钩子会在每次提交时校验 message，格式不对直接拦下。`.husky/pre-commit` 用 lint-staged 对暂存文件跑 `scripts/format.sh`，只修复和格式化，不跑测试；加了 `--no-stash`，不碰共用的 stash 列表，开头那行 "might result in data loss" 警告可以忽略（见 [`apps/docs/lint-format/tech.md` §9](apps/docs/lint-format/tech.md#9-pre-commit-钩子2026-10-22)）。**不要用 `--no-verify` 绕过钩子。**
 - **钩子对 clone 者自动生效。** 根 `package.json` 的 `"prepare": "husky"` 在 `pnpm install` 后自动激活 husky，无需手动 `husky init`。CI 里若因 `--ignore-scripts` 报错，设 `HUSKY=0` 禁用即可。husky 属于**根** `package.json`，不装进子包。
 - **版本与 changelog 暂不由提交流程管理。** 本仓库三个包都是 `private: true` 的应用，不发 registry，故**没有引入 changesets**——commit message 只影响历史可读性，不决定版本号。若将来在 `packages/*` 放要发布的包，再评估是否引入 changesets（见 `apps/docs/decisions/0002-commit-workflow-commitlint-no-changesets.md`）。
 - **提交流程由 slash command 驱动：**
