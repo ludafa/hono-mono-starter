@@ -17,7 +17,7 @@ current latest. Investigation surfaced three facts:
    of the `allowBuilds` map, and gates build scripts more strictly.
 3. **The ecosystem is on Vite 8.** Real `vite` is at `8.1.5`; **Vite 8 ships the
    Rolldown bundler + Oxc transformer natively.** `rolldown-vite` was the
-   *transitional* package that backported Rolldown onto the Vite 7 line — on
+   _transitional_ package that backported Rolldown onto the Vite 7 line — on
    Vite 8 it is redundant.
 
 ## Decision
@@ -25,26 +25,27 @@ current latest. Investigation surfaced three facts:
 **Migrate `apps/client` to real `vite@^8` and remove `rolldown-vite` entirely.**
 
 Because Vite 8 has Rolldown built in, moving off the `rolldown-vite` package loses
-no bundler benefit while dropping an experimental dependency *and* the override
+no bundler benefit while dropping an experimental dependency _and_ the override
 pin. (An earlier, more conservative step landed on `rolldown-vite@7.3.1`; the user
 then explicitly opted into the full Vite 8 migration, which this record reflects.)
 
 Upgraded the whole vite-adjacent set to their Vite 8-compatible latests:
 
-| Package | Before | After |
-|---|---|---|
-| `vite` | `npm:rolldown-vite@7.2.5` | `^8.1.5` (real vite) |
-| `@vitejs/plugin-react` | `^6.0.1` | `^6.0.3` (peer `vite@^8`) |
-| `@tailwindcss/vite` | `^4.2.4` | `^4.3.3` |
-| `tailwindcss` | `^4.2.4` | `^4.3.3` (kept in lockstep) |
-| `@tanstack/router-plugin` | `^1.167.32` | `^1.168.22` |
-| `@tanstack/react-router` | `^1.169.1` | `^1.170.18` (router-plugin peer) |
+| Package                   | Before                    | After                            |
+| ------------------------- | ------------------------- | -------------------------------- |
+| `vite`                    | `npm:rolldown-vite@7.2.5` | `^8.1.5` (real vite)             |
+| `@vitejs/plugin-react`    | `^6.0.1`                  | `^6.0.3` (peer `vite@^8`)        |
+| `@tailwindcss/vite`       | `^4.2.4`                  | `^4.3.3`                         |
+| `tailwindcss`             | `^4.2.4`                  | `^4.3.3` (kept in lockstep)      |
+| `@tanstack/router-plugin` | `^1.167.32`               | `^1.168.22`                      |
+| `@tanstack/react-router`  | `^1.169.1`                | `^1.170.18` (router-plugin peer) |
 
 **No `vite.config.ts` change was needed** — the config uses no `rollupOptions`/
 `esbuild` options (only `plugins`, `resolve.alias`, `server.proxy`, `define`), so
 there was nothing to rename to `rolldownOptions`/`oxc`.
 
 **pnpm config** now lives in `pnpm-workspace.yaml`:
+
 - The `vite` override is **removed** (no longer needed).
 - Build scripts are approved via the pnpm v11 `allowBuilds` map
   (`better-sqlite3`, `esbuild`, `msw`, `es5-ext` → `true`).

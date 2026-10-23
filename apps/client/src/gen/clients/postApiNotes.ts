@@ -5,15 +5,16 @@
 
 import fetch from '@kubb/plugin-client/clients/fetch';
 import type {
-  PostApiNotesMutationRequest,
-  PostApiNotesMutationResponse,
-  PostApiNotes401,
-} from '../types/PostApiNotes.ts';
-import type {
   Client,
   RequestConfig,
   ResponseErrorConfig,
 } from '@kubb/plugin-client/clients/fetch';
+
+import type {
+  PostApiNotesMutationRequest,
+  PostApiNotesMutationResponse,
+  PostApiNotes401,
+} from '../types/PostApiNotes.ts';
 
 function getPostApiNotesUrl() {
   const res = { method: 'POST', url: `/api/notes` as const };

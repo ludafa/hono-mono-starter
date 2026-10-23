@@ -38,7 +38,7 @@ These are load-bearing — change them only with the user's explicit go-ahead.
 - **Routes are defined with `createRoute(...)` from `@hono/zod-openapi`** and registered with `app.openapi(route, handler)`. Plain `app.get/post(...)` is fine for non-API endpoints (e.g. better-auth's `/api/auth/*`) but everything under `/api/<resource>/*` must go through `createRoute` so it shows up in `openapi.yml`.
 - **Zod schemas exposed in the OpenAPI doc must call `.openapi('Name')`.** The string becomes the schema's name in the spec; without it, Kubb generates inline anonymous types and clients lose readability.
 - **Authentication.** `requireAuth` middleware (`src/middleware/auth.ts`) reads the session via `auth.api.getSession({ headers })` and sets `c.set('userId', ...)`. Apply it to any `/api/<resource>/*` group that needs login. Routes that read `userId` should type their app as `OpenAPIHono<{ Variables: { userId: string } }>`.
-- **`better-auth` tables (`user`, `session`, `account`, `verification`) are managed by better-auth.** Do not edit those table definitions — adjust only the schema's *new* tables. If better-auth is upgraded and table shape changes, run `pnpm db:generate` and review the diff before applying.
+- **`better-auth` tables (`user`, `session`, `account`, `verification`) are managed by better-auth.** Do not edit those table definitions — adjust only the schema's _new_ tables. If better-auth is upgraded and table shape changes, run `pnpm db:generate` and review the diff before applying.
 - **`openapi.yml` is committed.** The client's Kubb codegen reads it. Anytime a route or a `.openapi('...')`-named schema changes, run `pnpm --filter @hono-mono-starter/server generate:openapi` and commit the result alongside the server change.
 - **GitHub OAuth is opt-in.** `auth.ts` only registers the GitHub provider if both `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` are set. The login page's "Continue with GitHub" button always renders — that's intentional; users who haven't configured it will get a clear error from better-auth on click.
 
@@ -54,10 +54,9 @@ These are load-bearing — change them only with the user's explicit go-ahead.
 
 ### Tooling
 
-- **ESLint flat config.** Both packages use `eslint.config.js` (flat). Lint runs with `--max-warnings 0` — CI fails on any warning.
-- **`simple-import-sort`** rewrites import order. Don't hand-sort imports.
-- **Prettier** is integrated via `eslint-plugin-prettier`. Server uses double quotes (no plugin config); client uses single quotes + `prettier-plugin-tailwindcss` for class sorting.
-- **TypeScript strict mode** with `verbatimModuleSyntax` and (client only) `erasableSyntaxOnly`. Use `import type` for type-only imports.
+- **Code style is automated — don't spend effort on it.** A PostToolUse hook runs `scripts/format.sh` (`oxlint --fix` + `oxfmt`) on every file you edit (formatting, import/Tailwind order, `curly`, `one-var`). `pnpm format` does the same repo-wide. Config lives only in the root `.oxlintrc.json` / `.oxfmtrc.json`; client-only rules go in the `apps/client/**` override. Rationale: [`apps/docs/lint-format/`](apps/docs/lint-format/README.md).
+- **Before finishing, run `pnpm lint` and `pnpm typecheck`** and fix what's left (strict TS with `verbatimModuleSyntax`: use `import type`). Suppress a rule with `// oxlint-disable-next-line <rule>`.
+- **Kubb's `src/gen/**` must stay formatted by oxfmt** (`kubb.config.ts` → `format: 'oxfmt'`); don't add it to `.oxfmtrc.json`'s `ignorePatterns`. Other codegen output (`routeTree.gen.ts`, `drizzle/**`) is ignored by both configs — add new codegen output there too.
 
 ## Git 提交约定
 

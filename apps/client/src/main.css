@@ -155,12 +155,11 @@
 
 /* Soft hairline + dotted backdrop for editorial surfaces. */
 @utility bg-grain {
-  background-image:
-    radial-gradient(
-      circle at 1px 1px,
-      var(--color-foreground) 0.5px,
-      transparent 0
-    );
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    var(--color-foreground) 0.5px,
+    transparent 0
+  );
   background-size: 24px 24px;
   background-position: 0 0;
   opacity: 0.06;

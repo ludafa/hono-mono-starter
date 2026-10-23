@@ -11,22 +11,28 @@ The server defaults to `http://localhost:3000` (Hono via `@hono/node-server`, wi
 1. **Verify prerequisites.** If the root `.env`, `apps/server/.env`, or `apps/client/src/gen/` is missing, run the `bootstrap` skill first.
 
 2. **Start the server in the background:**
+
    ```bash
    pnpm dev:server
    ```
+
    Use the Bash tool with `run_in_background: true`. Wait for `Server running at http://localhost:3000` in the output.
 
 3. **Start the client in the background:**
+
    ```bash
    pnpm dev:client
    ```
+
    Wait for Vite to print `ready in <ms> ms` and the URL `http://localhost:5173/`.
 
 4. **Verify both are up:**
+
    ```bash
    curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/doc      # expect 200
    curl -s -o /dev/null -w '%{http_code}\n' http://localhost:5173/         # expect 200
    ```
+
    Open the Swagger UI at `http://localhost:3000/reference` to confirm endpoints are registered.
 
 5. **Tell the user the URLs** they should open. If something fails, surface the relevant log line, don't dump the whole output.

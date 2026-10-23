@@ -24,6 +24,7 @@ Two layouts decide auth behavior:
    ```tsx
    // apps/client/src/routes/_app/projects.tsx
    import { createFileRoute } from '@tanstack/react-router';
+
    import { ProjectListPage } from '../../pages/project-list';
 
    export const Route = createFileRoute('/_app/projects')({
@@ -36,6 +37,7 @@ Two layouts decide auth behavior:
    ```tsx
    // apps/client/src/routes/_app/projects.$projectId.tsx
    import { createFileRoute } from '@tanstack/react-router';
+
    import { ProjectDetailPage } from '../../pages/project-detail';
 
    export const Route = createFileRoute('/_app/projects/$projectId')({

@@ -5,7 +5,7 @@
 
 ## Context
 
-需求是"给仓库加 git 提交相关能力"，参考的是一份完整的 *monorepo 版本与发布* 指南
+需求是"给仓库加 git 提交相关能力"，参考的是一份完整的 _monorepo 版本与发布_ 指南
 ——用 **changesets** 管理每个包的独立版本、独立 changelog，并 `pnpm changeset publish`
 发到 npm / 私有 registry，配 `/commit`、`/split-commits`、`/release` 三条 slash command
 驱动全流程。
@@ -26,13 +26,13 @@
 **只落地指南里的"提交工作流"部分，不引入 changesets、不建 `/release`。**（用户在两个
 选项间明确选择了"只做提交工作流"。）具体：
 
-| 指南组件 | 本仓库取舍 |
-|---|---|
-| `@changesets/cli` + `.changeset/config.json` | **不装** —— 无发版对象 |
-| `/commit` 生成 changeset + 提交 | 改写为**只提交**：分析 staged 改动 → 定 type/scope → 写 Conventional Commit → 提交 |
-| `/split-commits` | 保留（去掉"changeset 跟随功能 commit"那条） |
-| `/release`（bump 版本 / changelog / publish / tag） | **不建** |
-| commitlint + husky 兜底 | **装**（用户选择安装） |
+| 指南组件                                            | 本仓库取舍                                                                         |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `@changesets/cli` + `.changeset/config.json`        | **不装** —— 无发版对象                                                             |
+| `/commit` 生成 changeset + 提交                     | 改写为**只提交**：分析 staged 改动 → 定 type/scope → 写 Conventional Commit → 提交 |
+| `/split-commits`                                    | 保留（去掉"changeset 跟随功能 commit"那条）                                        |
+| `/release`（bump 版本 / changelog / publish / tag） | **不建**                                                                           |
+| commitlint + husky 兜底                             | **装**（用户选择安装）                                                             |
 
 **版本号与 changelog 暂不由提交流程管理**，commit message 只影响历史可读性。若将来在
 `packages/*` 放要发布的包，再评估引入 changesets——那才是它的正确适用场景。

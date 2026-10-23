@@ -37,7 +37,7 @@ export function RegisterPage() {
         <h1 className="font-display text-4xl leading-[1.05] tracking-tight">
           Create your <span className="italic">account</span>.
         </h1>
-        <p className="text-muted-foreground text-sm leading-relaxed">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           Spin up a workspace in under a minute — no credit card.
         </p>
       </header>
@@ -46,7 +46,7 @@ export function RegisterPage() {
         <div className="space-y-1.5">
           <label
             htmlFor="name"
-            className="text-muted-foreground text-[0.7rem] font-medium tracking-[0.16em] uppercase"
+            className="text-[0.7rem] font-medium tracking-[0.16em] text-muted-foreground uppercase"
           >
             Name
           </label>
@@ -57,13 +57,13 @@ export function RegisterPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="border-foreground/15 focus:border-foreground w-full border-0 border-b bg-transparent py-2 text-base transition-colors focus:ring-0 focus:outline-none"
+            className="w-full border-0 border-b border-foreground/15 bg-transparent py-2 text-base transition-colors focus:border-foreground focus:ring-0 focus:outline-none"
           />
         </div>
         <div className="space-y-1.5">
           <label
             htmlFor="email"
-            className="text-muted-foreground text-[0.7rem] font-medium tracking-[0.16em] uppercase"
+            className="text-[0.7rem] font-medium tracking-[0.16em] text-muted-foreground uppercase"
           >
             Email
           </label>
@@ -74,16 +74,16 @@ export function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="border-foreground/15 focus:border-foreground w-full border-0 border-b bg-transparent py-2 text-base transition-colors focus:ring-0 focus:outline-none"
+            className="w-full border-0 border-b border-foreground/15 bg-transparent py-2 text-base transition-colors focus:border-foreground focus:ring-0 focus:outline-none"
           />
         </div>
         <div className="space-y-1.5">
           <label
             htmlFor="password"
-            className="text-muted-foreground flex items-baseline justify-between text-[0.7rem] font-medium tracking-[0.16em] uppercase"
+            className="flex items-baseline justify-between text-[0.7rem] font-medium tracking-[0.16em] text-muted-foreground uppercase"
           >
             <span>Password</span>
-            <span className="text-muted-foreground/70 tracking-normal normal-case">
+            <span className="tracking-normal text-muted-foreground/70 normal-case">
               min 8 chars
             </span>
           </label>
@@ -95,11 +95,11 @@ export function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={8}
-            className="border-foreground/15 focus:border-foreground w-full border-0 border-b bg-transparent py-2 text-base transition-colors focus:ring-0 focus:outline-none"
+            className="w-full border-0 border-b border-foreground/15 bg-transparent py-2 text-base transition-colors focus:border-foreground focus:ring-0 focus:outline-none"
           />
         </div>
         {error && (
-          <p className="text-destructive animate-in fade-in slide-in-from-top-1 text-sm duration-200">
+          <p className="animate-in text-sm text-destructive duration-200 fade-in slide-in-from-top-1">
             {error}
           </p>
         )}
@@ -108,11 +108,11 @@ export function RegisterPage() {
         </Button>
       </form>
 
-      <p className="text-muted-foreground text-center text-xs">
+      <p className="text-center text-xs text-muted-foreground">
         Already a member?{' '}
         <Link
           to="/login"
-          className="text-foreground decoration-foreground/30 hover:decoration-foreground underline underline-offset-4 transition-colors"
+          className="text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:decoration-foreground"
         >
           Sign in
         </Link>

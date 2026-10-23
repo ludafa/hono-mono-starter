@@ -16,8 +16,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="bg-background text-foreground min-h-screen">
-      <header className="border-foreground/8 bg-background/75 sticky top-0 z-20 border-b backdrop-blur-xl">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-20 border-b border-foreground/8 bg-background/75 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5 sm:px-8">
           <Link
             to="/"
@@ -26,14 +26,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <span className="font-display text-lg leading-none italic">
               hono
             </span>
-            <span className="text-muted-foreground/70 leading-none">·</span>
-            <span className="text-muted-foreground leading-none lowercase">
+            <span className="leading-none text-muted-foreground/70">·</span>
+            <span className="leading-none text-muted-foreground lowercase">
               mono
             </span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">
             {session?.user && (
-              <span className="text-muted-foreground hidden text-xs sm:inline">
+              <span className="hidden text-xs text-muted-foreground sm:inline">
                 {session.user.email}
               </span>
             )}
@@ -47,7 +47,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8 sm:py-14">
-        <div className="animate-in fade-in slide-in-from-bottom-1 fill-mode-backwards duration-500">
+        <div className="animate-in duration-500 fill-mode-backwards fade-in slide-in-from-bottom-1">
           {children}
         </div>
       </main>

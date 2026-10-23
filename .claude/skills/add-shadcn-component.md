@@ -11,14 +11,18 @@ shadcn/ui generates source files into the project — there's no runtime import 
 1. **Confirm the component name** with the shadcn registry. Common names: `button`, `dialog`, `sheet`, `dropdown-menu`, `tabs`, `toast`/`sonner`, `tooltip`, `popover`, `command`.
 
 2. **Run from the client workspace:**
+
    ```bash
    pnpm --filter @hono-mono-starter/client dlx shadcn@latest add <component-name>
    ```
+
    This writes `.tsx` files into `apps/client/src/components/ui/` and may add deps to `apps/client/package.json`.
 
 3. **Re-run install if deps were added:** `pnpm install`.
 
-4. **Use it.** Import from `@/components/ui/<component-name>`.
+4. **Format the new files:** `pnpm format`. shadcn's output doesn't follow the project's formatting (notably the Tailwind class order, which oxfmt derives from `main.css`), and `pnpm lint` fails until it's run.
+
+5. **Use it.** Import from `@/components/ui/<component-name>`.
 
 ## Notes
 

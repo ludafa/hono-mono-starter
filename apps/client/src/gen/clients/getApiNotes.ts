@@ -5,14 +5,15 @@
 
 import fetch from '@kubb/plugin-client/clients/fetch';
 import type {
-  GetApiNotesQueryResponse,
-  GetApiNotes401,
-} from '../types/GetApiNotes.ts';
-import type {
   Client,
   RequestConfig,
   ResponseErrorConfig,
 } from '@kubb/plugin-client/clients/fetch';
+
+import type {
+  GetApiNotesQueryResponse,
+  GetApiNotes401,
+} from '../types/GetApiNotes.ts';
 
 function getGetApiNotesUrl() {
   const res = { method: 'GET', url: `/api/notes` as const };

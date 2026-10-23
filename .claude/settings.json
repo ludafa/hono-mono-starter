@@ -9,6 +9,7 @@
       "Bash(pnpm test:*)",
       "Bash(pnpm lint)",
       "Bash(pnpm lint:*)",
+      "Bash(pnpm format)",
       "Bash(pnpm typecheck)",
       "Bash(pnpm build)",
       "Bash(pnpm --filter * run *)",
@@ -20,6 +21,21 @@
       "Bash(npx tsc --noEmit)",
       "Bash(curl -s http://localhost:3000/*)",
       "Bash(curl -s http://localhost:5173/*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // .tool_response.filePath // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*) ;; *) exit 0 ;; esac; cd \"$CLAUDE_PROJECT_DIR\" && sh scripts/format.sh \"$f\" >/dev/null 2>&1; exit 0",
+            "timeout": 30,
+            "statusMessage": "scripts/format.sh"
+          }
+        ]
+      }
     ]
   }
 }

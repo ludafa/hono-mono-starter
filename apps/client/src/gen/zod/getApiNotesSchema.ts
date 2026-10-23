@@ -3,9 +3,10 @@
  * Do not edit manually.
  */
 
+import { z } from 'zod/v4';
+
 import { apiErrorSchema } from './apiErrorSchema.ts';
 import { noteSchema } from './noteSchema.ts';
-import { z } from 'zod/v4';
 
 /**
  * @description Notes

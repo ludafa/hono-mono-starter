@@ -9,15 +9,19 @@ The server's OpenAPI document is the contract. After touching server routes or n
 ## Steps
 
 1. **Server side — emit the spec:**
+
    ```bash
    pnpm --filter @hono-mono-starter/server run generate:openapi
    ```
+
    This runs `scripts/generate-openapi.ts`, which builds the Hono app and serializes the OpenAPI 3.1 doc into `apps/server/openapi.yml`.
 
 2. **Client side — run Kubb:**
+
    ```bash
    pnpm --filter @hono-mono-starter/client run generate:api
    ```
+
    Kubb reads `../server/openapi.yml` and writes:
    - `apps/client/src/gen/types/` — TypeScript types per operation/schema
    - `apps/client/src/gen/clients/` — `fetch`-based client functions

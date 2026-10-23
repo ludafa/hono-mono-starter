@@ -11,6 +11,8 @@ export default defineConfig({
   output: {
     path: './src/gen',
     clean: true,
+    // See apps/docs/lint-format/tech.md §5.
+    format: 'oxfmt',
   },
   plugins: [
     pluginOas(),
