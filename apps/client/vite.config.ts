@@ -15,7 +15,7 @@ export default defineConfig(({ command, mode }) => {
   const serverPort = Number(env.SERVER_PORT ?? 3000);
   const clientPort = Number(env.CLIENT_PORT ?? 5173);
   const serverUrl = env.SERVER_URL ?? `http://localhost:${serverPort}`;
-  const isDev = mode === 'development';
+  const isServe = command === 'serve';
 
   console.log(
     `Vite dev server running on port ${clientPort}, proxying API requests to ${serverUrl}`,
@@ -40,9 +40,9 @@ export default defineConfig(({ command, mode }) => {
     // See apps/docs/dev-auto-login/tech.md §4.1.
     define: {
       'import.meta.env.VITE_DEV_AUTO_LOGIN': JSON.stringify(
-        command === 'serve' && env.DEV_AUTO_LOGIN === 'true',
+        isServe && env.DEV_AUTO_LOGIN === 'true',
       ),
-      ...(isDev
+      ...(isServe
         ? {}
         : { 'import.meta.env.VITE_API_URL': JSON.stringify(serverUrl) }),
     },

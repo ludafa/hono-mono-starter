@@ -46,6 +46,7 @@
   - 4：`devSignIn()` 抛异常时也跳 `/login`。
   - 7：端点改成 server-only，HTTP 入口改成 Hono 单独注册的路由（[tech.md §3.1](tech.md#31-server-only-端点和单独的路由)）。
   - 9：启动日志改成 "any local client can sign in"。
+  - 8：单独提交，见阶段 6。
 - 没改：5、6，见 [tech.md §6](tech.md#6-没采用的方案2026-11-01)。
 - 偏差：
   - 改第 7 条时发现直接调用 `auth.api.*` 会跳过 better-auth 路由层的 origin 检查，计划外补上 `formCsrfMiddleware`（[tech.md §3.3](tech.md#33-csrf-检查)）。
@@ -60,4 +61,11 @@
 - 文件：本模块文档（新，原来是 `apps/docs/features/dev-auto-login.md`）；上面各代码文件的注释；根 `.env.example`、`apps/server/.env.example`、CLAUDE.md。
 - 实际改动：本地 main 没有自己的提交，先 fast-forward 到远端 main，再恢复改动；`vite.config.ts`、`auth.ts` 的冲突只是格式差异；说明性注释挪进 tech.md，原处换成 `See apps/docs/dev-auto-login/tech.md §…`；去掉 client 里已经过时的 `body: {}`（[tech.md §4.2](tech.md#42-client-插件-devsignin)）。最后拆成两个提交（用户确认）。
 - 检查：见 [verification.md §4](verification.md#4-各次实际结果)。
+- 状态：✅ 完成（2026-11-01）
+
+### 阶段 6：`VITE_API_URL` 也按 `command` 判断（第二轮 code review 第 8 条，用户选择统一）
+
+- 文件：`apps/client/vite.config.ts`。
+- 实际改动：`isDev`（`mode === 'development'`）换成 `isServe`（`command === 'serve'`），开关和 `VITE_API_URL` 用同一个判断（[tech.md §4.1](tech.md#41-viteconfigts注入开关和-dev--build-的判断)）。行为变化：`vite build --mode development` 现在写死 `SERVER_URL`；`vite --mode <其他>` 现在走代理。
+- 检查：两种 mode 的构建产物里都有 `SERVER_URL` 的值；`vite --mode staging` 下浏览器请求走 Vite 代理，自动登录成功（实测）。
 - 状态：✅ 完成（2026-11-01）

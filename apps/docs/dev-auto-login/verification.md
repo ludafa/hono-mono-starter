@@ -12,6 +12,7 @@
 | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ---------- |
 | `pnpm typecheck`、`pnpm lint`；client 的 `tsc -b`                                                                            | 通过                                                                           | 2026-11-01 |
 | `DEV_AUTO_LOGIN=true vite build --mode production`、`--mode development`，在产物里搜 `dev/sign-in`、`devSignIn`、`dev-login` | 两种 mode 都搜不到                                                             | 2026-11-01 |
+| 同上两次构建，在产物里搜 `SERVER_URL` 的值                                                                                   | 两种 mode 都搜得到（`VITE_API_URL` 写死了）                                    | 2026-11-01 |
 | server 启动日志                                                                                                              | 生效 / 被忽略两种 warning，内容见 [tech.md §1](tech.md#1-用法和行为2026-11-01) | 2026-11-01 |
 
 ## 3. 手动验收清单
@@ -38,6 +39,7 @@ DEV_AUTO_LOGIN=true NODE_ENV=dev DATABASE_PATH=/tmp/dev-login.db pnpm dev:server
 11. 拦掉 `/api/auth/dev/sign-in`（DevTools 的 request blocking），再打开 `/` → 跳 `/login`，控制台有 `DEV_AUTO_LOGIN: dev sign-in request failed`，没有错误页。
 12. 停掉 server 再打开 `/`（代理返回 502）→ 不发 `dev/sign-in` 请求，跳 `/login`。
 13. server 不设 `NODE_ENV=dev`、Vite 开着开关 → 控制台有 `DEV_AUTO_LOGIN: dev sign-in failed (HTTP 404)`，跳 `/login`。
+14. 用 `vite --mode staging` 起 Vite，重复第 9 条 → 请求同样走代理，自动登录成功。
 
 ## 4. 各次实际结果
 
@@ -50,10 +52,10 @@ DEV_AUTO_LOGIN=true NODE_ENV=dev DATABASE_PATH=/tmp/dev-login.db pnpm dev:server
   - 第 8 条最早是在进程内用 `Promise.all` 测的。修复前 3 个请求里有 2 个撞上唯一约束；修复后都返回 200，只有一个用户，临时加的日志确认 catch 分支走了 2 次，之后删掉了。
   - 第 9、10、12、13 条通过。
   - 构建检查通过。
-- 第二轮 code review 修复后（阶段 4）：第 2～7 条、第 9～11 条通过。
+- 第二轮 code review 修复后（阶段 4）：第 2～7 条通过；第 9～11 条在 `vite --mode staging` 下通过。
 - 合入远端 main、改完注释和 `body: {}` 之后（阶段 5～6），全部重跑：
   - `pnpm typecheck`、`oxlint`、`oxfmt --check`、client `tsc -b` 通过。
   - 第 1 条：`NODE_ENV` 不设、`development` 返回 404，日志提示被忽略；`production` 第一次没起来，因为本机没有 `apps/server/.env`，better-auth 报 "You are using the default secret"，用临时 secret 重启后返回 404；只设 `NODE_ENV=dev` 返回 404，没有 warning；两个都设返回 200，日志是 "any local client can sign in as test@test.com"。
   - 第 2～8 条通过。第 5 条的 11 种写法里，6 种返回 404（没有路由能匹配），5 种（`%73ign-in`、`./`、`x/../`、`?a=1` 这类 Hono 归一化后匹配到新路由的）返回 403，没有 200。第 8 条用 3 个并发 curl，在空数据库上测。
-  - 第 9～13 条通过。第 9 条的请求不带 body，经代理时 `Origin` 是 `http://localhost:5917`，通过了 CSRF 检查。
-  - 构建：两种 mode 的产物里都没有 dev-login 代码。
+  - 第 9～13 条用默认 mode 的 Vite 通过；第 14 条通过。第 9 条的请求不带 body，经代理时 `Origin` 是 `http://localhost:5917`，通过了 CSRF 检查。
+  - 构建：两种 mode 的产物里都没有 dev-login 代码，都写死了 `SERVER_URL`。

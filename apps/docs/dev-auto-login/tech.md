@@ -89,9 +89,11 @@ NODE_ENV=dev
 
 ### 4.1 `vite.config.ts`：注入开关和 dev / build 的判断
 
-- 开关以 `import.meta.env.VITE_DEV_AUTO_LOGIN`（boolean）的形式 `define` 进去，类型声明在 `apps/client/src/vite-env.d.ts`。值是 `command === 'serve' && env.DEV_AUTO_LOGIN === 'true'`。
+- 开关以 `import.meta.env.VITE_DEV_AUTO_LOGIN`（boolean）的形式 `define` 进去，类型声明在 `apps/client/src/vite-env.d.ts`。值是 `isServe && env.DEV_AUTO_LOGIN === 'true'`，`isServe` 即 `command === 'serve'`。
 - 判断依据是 `command`（`vite` 还是 `vite build`），不是 `mode`：**任何 `vite build`（包括 `--mode development`）里它都是 `false`**，dev-login 代码被删掉（§4.4）。原来按 `mode === 'development'` 判断，`vite build --mode development` 打出的包会保留这段代码（第一轮 code review 指出）。
-- `VITE_API_URL` 按 `mode === 'development'`（`isDev`）判断：dev 时不设置它，client 用相对路径 `/api/*`，经 Vite 的代理访问 server（同源，没有 CORS 预检）；其他 mode 都写死成 `SERVER_URL`。所以 `vite --mode staging` 的请求会绕过代理直连 server，`vite build --mode development` 打出的包用相对路径。
+- `VITE_API_URL` 用同一个判断：`vite`（任何 mode）都不设置它，client 用相对路径 `/api/*`，经 Vite 的代理访问 server（同源，没有 CORS 预检）；`vite build`（任何 mode）都写死成 `SERVER_URL`。代理只存在于 dev server，所以按 `command` 判断才对得上。
+
+> 2026-11-01 修订（第二轮 code review 第 8 条，用户选择统一）：原来 `VITE_API_URL` 按 `mode === 'development'` 判断，和开关的判断依据不同。那时 `vite --mode staging` 的请求绕过代理直连 server，`vite build --mode development` 打出的包用相对路径。
 
 ### 4.2 client 插件 `devSignIn()`
 

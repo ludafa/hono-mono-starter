@@ -24,7 +24,7 @@ code:
 - 端点是 server-only 的，HTTP 入口是 Hono 单独注册的路由，本机检查不依赖两套路由的路径匹配（code review 指出，见 [tech.md §3.1](tech.md#31-server-only-端点和单独的路由)）
 - "本机"指 socket 来自 loopback 或本机网卡地址，并且 `Host` 是本地名字（code review 指出，见 [tech.md §3.2](tech.md#32-只接受本机请求)）
 - 补上 better-auth 的 `formCsrfMiddleware`：直接调用 `auth.api.*` 会跳过路由层的 origin 检查（Claude 发现，见 [tech.md §3.3](tech.md#33-csrf-检查)）
-- client 按 `command`（`vite` / `vite build`）判断 dev，不按 `mode`；任何 `vite build` 都不含这段代码（code review 指出，见 [tech.md §4.1](tech.md#41-viteconfigts注入开关和-dev--build-的判断)）
+- client 按 `command`（`vite` / `vite build`）判断 dev，不按 `mode`；任何 `vite build` 都不含这段代码，`VITE_API_URL` 也用同一个判断（code review 指出，用户选择统一，见 [tech.md §4.1](tech.md#41-viteconfigts注入开关和-dev--build-的判断)）
 - client 和 server 各读一次开关，所以 `DEV_AUTO_LOGIN` 必须写在根 `.env`（保留现状，见 [tech.md §6](tech.md#6-没采用的方案2026-11-01)）
 - 开着这个功能时不要用 `vite --host`（见 [tech.md §5](tech.md#5-安全边界2026-11-01)）
 
@@ -33,8 +33,8 @@ code:
 | 文件                               | 内容                                                                                                                                                                                                                                                              |
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [tech.md](tech.md)                 | §1 用法和行为；§2 两个开关、启动日志；§3 server：server-only 端点和路由、本机检查、CSRF、首次使用的并发、`dont_remember` cookie、不进 `openapi.yml`；§4 client：`vite.config.ts`、`devSignIn()`、`_app.tsx` 守卫、构建产物；§5 安全边界；§6 没采用的方案；§7 风险 |
-| [plan.md](plan.md)                 | 2026-11-01 一次施工的 5 个阶段：初版、`NODE_ENV=dev`（用户追加）、两轮 code review 的修复、合入远端 main 后按新约定调整                                                                                                                                           |
-| [verification.md](verification.md) | 没有单测；端到端检查；13 条手动验收（curl 测开关、本机检查、路径变体、CSRF、cookie，浏览器测自动登录、登出、失败时跳转）；2026-11-01 的实测结果                                                                                                                   |
+| [plan.md](plan.md)                 | 2026-11-01 一次施工的 6 个阶段：初版、`NODE_ENV=dev`（用户追加）、两轮 code review 的修复、合入远端 main 后按新约定调整、`VITE_API_URL` 也按 `command` 判断                                                                                                       |
+| [verification.md](verification.md) | 没有单测；端到端检查；14 条手动验收（curl 测开关、本机检查、路径变体、CSRF、cookie，浏览器测自动登录、登出、失败时跳转）；2026-11-01 的实测结果                                                                                                                   |
 
 ## 相关模块
 
