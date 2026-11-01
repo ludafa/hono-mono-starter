@@ -38,4 +38,4 @@ code:
 
 ## 相关模块
 
-- [构建与依赖](../toolchain/README.md)：`vite.config.ts` 的其余配置。
+- [构建与依赖](../../../.claude/skills/toolchain/SKILL.md)（`toolchain` skill）：`vite.config.ts` 的其余配置。

@@ -1,6 +1,6 @@
 # 提交流程：施工计划
 
-> 相关：[模块说明](README.md) · [技术实现](tech.md) · [验证方案](verification.md)
+> 相关：[操作指南](../SKILL.md) · [技术实现](tech.md) · [验证方案](verification.md)
 
 ## 2026-07-19（分支 `chore/vite8-migration`，PR #2 于 2026-07-25 合入）
 
@@ -19,10 +19,14 @@
 
 ### 阶段 3：slash command 和文档
 
-- 文件：`.claude/commands/commit.md`（新）、`.claude/commands/split-commits.md`（新）、CLAUDE.md「Git 提交约定」、ADR `apps/docs/decisions/0002`（2026-10-21 改写成本模块，见 [文档体系的施工计划](../doc-system/plan.md)）。
+- 文件：`.claude/commands/commit.md`（新）、`.claude/commands/split-commits.md`（新）、CLAUDE.md「Git 提交约定」、ADR `apps/docs/decisions/0002`（2026-10-21 改写成本模块，见 [文档体系的施工计划](../../feature-docs/references/plan.md)）。
 - 状态：✅ 完成（2026-07-25）
 - 检查：见 [verification.md §4](verification.md#4-各次实际结果)。
 
 ## 2026-10-22（分支 `ludafa/add-oxlint-eslint-config`）
 
-加了只格式化暂存文件的 `.husky/pre-commit`（lint-staged），施工记录在 [代码规范与格式化的施工计划](../lint-format/plan.md)。
+加了只格式化暂存文件的 `.husky/pre-commit`（lint-staged），施工记录在 [代码规范与格式化的施工计划](../../lint-format/references/plan.md)。
+
+## 2026-11-01（分支 `docs/maintenance-skills`）
+
+本模块的文档从 `apps/docs/commit-workflow/` 搬进本 skill 的 `references/`，原来的 README 改写成 [SKILL.md](../SKILL.md) 的操作指南。施工记录在 [文档体系的施工计划](../../feature-docs/references/plan.md#2026-11-01分支-docsmaintenance-skills)。

@@ -1,11 +1,18 @@
 ---
 name: feature-docs
-description: 按本项目的格式撰写和维护功能文档。文档按功能模块放在 apps/docs/<module>/（README.md 模块入口 + product / tech / plan / verification / probe），apps/docs/README.md 是由脚本从模块头部生成的总索引。只要要写新功能的设计文档、把讨论好的方案"落成文档"、整理技术方案或选型理由、新建功能模块、在施工计划里记录阶段完成情况/偏差、在验证方案里补实际结果、记录一次可行性调研、或给已有文档追加/修订内容，都要使用本 skill，哪怕用户只说"写一下方案""记到文档里""更新一下施工计划"。
+description: 按本项目的格式撰写和维护文档。业务功能的文档按模块放在 apps/docs/<module>/（README.md 模块入口 + product / tech / plan / verification / probe），apps/docs/README.md 是由脚本从模块头部生成的总索引；项目维护类（构建与依赖、lint、提交流程、文档体系）的文档放在对应 skill 的 SKILL.md（操作指南）和 references/ 里。只要要写新功能的设计文档、把讨论好的方案"落成文档"、整理技术方案或选型理由、新建功能模块或维护类 skill、在施工计划里记录阶段完成情况/偏差、在验证方案里补实际结果、记录一次可行性调研、或给已有文档追加/修订内容，都要使用本 skill，哪怕用户只说"写一下方案""记到文档里""更新一下施工计划"。pnpm lint 报文档索引、引用或链接的错误时也用本 skill。
 ---
 
-# 功能文档的写法
+# 文档的写法
 
-文档按**功能模块**组织，思路和 skill 一样：渐进式展开。
+文档按读者分两处放：
+
+- **业务功能**：`apps/docs/<module>/`，项目自己的功能。§1～§7 讲它。
+- **项目维护**：构建与依赖、代码规范与格式化、提交流程、文档体系本身，放在对应的 skill 里（`toolchain`、`lint-format`、`commit-workflow`、本 skill）。`SKILL.md` 是做这类事时照着走的操作指南，`references/` 放 tech / plan / verification / probe，写法和功能模块一样。见 §8。
+
+这些维护类的东西对派生项目来说是"拿来用"的，日常只需要操作指南；放进 skill 后 Claude 碰到相关任务会自动加载，`apps/docs/` 也只剩项目自己的功能（理由见 [references/tech.md §7](references/tech.md#7-维护类文档放进-skill2026-11-01)）。
+
+功能模块的文档思路和 skill 一样：渐进式展开。
 
 1. `apps/docs/README.md`：总索引，每个模块一行（名称、管什么、施工日期、状态），下面还有一张"按时间"表。由 `pnpm docs:index` 从各模块头部生成，**不要手改**。
 2. `apps/docs/<module>/README.md`：模块入口。frontmatter 是给索引用的元数据，正文是概要、关键决定和本目录的文件说明。
@@ -13,14 +20,14 @@ description: 按本项目的格式撰写和维护功能文档。文档按功能�
 
 这样人能按功能直接找到目录，模型先读索引和模块入口，只在需要时打开原文。所以每一层都要写清楚"下一层里有什么"，读者才能判断要不要往下点。
 
-动笔前先看 `apps/docs/README.md` 和一个写得完整的模块（如 `apps/docs/lint-format/`），对齐语气和颗粒度。`references/templates.md` 有每种文件的骨架。
+动笔前先看 `apps/docs/README.md` 和一个写得完整的例子（功能模块看 `apps/docs/dev-auto-login/`，维护类看 `.claude/skills/lint-format/`），对齐语气和颗粒度。`references/templates.md` 有每种文件的骨架。
 
 ## 1. 模块和文件
 
 ```
 apps/docs/
   README.md                 # 生成的总索引
-  <module>/                 # 目录名 = 功能模块，小写英文短横线，如 auth、lint-format
+  <module>/                 # 目录名 = 功能模块，小写英文短横线，如 auth、dev-auto-login
     README.md               # 模块入口（必有）
     product.md              # 产品设计：做什么、为什么、怎么算成功
     tech.md                 # 技术实现：怎么做
@@ -29,6 +36,7 @@ apps/docs/
     probe-<主题>.md         # 可选：可行性调研，只回答"能不能做"
 ```
 
+- **先分功能还是维护**：改的是应用本身的功能，写进 `apps/docs/`；改的是构建、依赖、lint / 格式化、提交流程、文档体系，写进对应 skill 的 `references/`，不在 `apps/docs/` 建模块。新的维护类主题（如 CI、部署）新建一个 skill（§8）。
 - **新功能先判断归属**：属于已有模块就在那个模块里追加；是新的独立功能才新建目录。一个功能跨几个模块时，放在主要模块，其它模块在 README 的"相关模块"里链过去。
 - 没内容的文件不建。小功能可以只有 `README.md` + `tech.md`。
 - 文件名里不出现日期；日期只出现在 frontmatter 的 `changes`、章节标题的标注和 `plan.md` 的日期小节里。
@@ -37,23 +45,23 @@ apps/docs/
 
 ```markdown
 ---
-name: lint-format
-title: 代码规范与格式化
-description: 全仓库一套 Oxlint + Oxfmt（.oxlintrc.json / .oxfmtrc.json）……；改 lint 规则、格式化选项、编辑器集成或排查 pnpm lint 报错时来读。
-changes: [2026-10-21]
+name: dev-auto-login
+title: 开发环境自动登录
+description: 开发时跳过注册登录，直接以 test@test.com 进入应用：两个开关（DEV_AUTO_LOGIN、NODE_ENV=dev）、server-only 的 better-auth 插件……；想开或排查自动登录、改登录守卫时来读。
+changes: [2026-11-01]
 status: 已上线
 code:
-  - .oxlintrc.json
-  - .oxfmtrc.json
+  - apps/server/src/dev-login.ts
+  - apps/client/src/routes/_app.tsx
 ---
 
-# 代码规范与格式化
+# 开发环境自动登录
 
 <概要 3～6 句>
 
 ## 关键决定
 
-- <一句结论>（2026-10-21，见 [tech.md §1](tech.md#…)）
+- <一句结论>（2026-11-01，见 [tech.md §2](tech.md#…)）
 
 ## 文件
 
@@ -75,11 +83,11 @@ code:
 - 后来的施工加了一块功能：在文档**末尾追加**新章节，标题带日期。编号规则见下面"章节编号只增不改"。
 - 新建 product.md 时以 `## 范围与非目标`、`## 成功标准` 收尾；新建 tech.md 时以 `## 风险`（`| 风险 | 应对 |`）收尾，未验证的假设也列进风险表。以后追加的章节排在它们后面，新的风险、非目标、成功标准仍然写回原来那一章。
 - 设计阶段（status 为设计中）一般先写 product.md 的问题、行为、非目标，再写 tech.md。用户只要"技术方案"时可以先写 tech.md，但非目标和成功标准要跟用户确认后补上。
-- 纯工具链、基础设施类模块（构建、lint、提交流程）可以没有 product.md；"开发者看到的行为"放进 tech.md 开头即可。
+- 维护类 skill 的 `references/` 一般没有 product.md："开发者看到的行为"写进 SKILL.md 的操作指南或 tech.md 开头即可。
 
 ### 章节编号只增不改
 
-代码注释用 `See apps/docs/<模块>/<文件>.md §<编号>` 引用文档（见 `CLAUDE.md`「代码注释」）。编号一变，引用就会指错地方。所以：
+代码注释用 `See apps/docs/<模块>/<文件>.md §<编号>` 或 `See .claude/skills/<skill>/references/<文件>.md §<编号>` 引用文档（见 `CLAUDE.md`「代码注释」）。编号一变，引用就会指错地方。所以：
 
 - **已有的章节一律不重新编号**，哪怕顺序看起来不顺、编号不连续，或者"风险"不再是最后一章。
 - **新功能的章节追加在文档末尾**，编号取当前最大的一级编号 + 1：已有 `## 1.`～`## 7.`，新功能就是 `## 8. 类型感知规则（2026-11-02）`，放在 `## 7. 风险` 后面。
@@ -123,12 +131,50 @@ code:
 - **写出处。** 用户拍板的决定加括号标注：（用户拍板）（用户确认）（用户补充）（用户追加）（用户试用发现）。以后就知道哪些能改、哪些要先问。
 - **数字要具体，带单位，注明是不是实测**："全量 lint 约 0.12 秒（实测，Node 26，81 个文件）"。没测过的写"未验证"。
 - **写出代码位置。** 涉及的代码写路径和符号：`apps/server/src/middleware/auth.ts` 的 `requireAuth`；新文件标"（新）"。
-- **文档是唯一的说明来源。** 代码注释不重复文档内容，只写 `See apps/docs/<模块>/<文件>.md §<章节>`（规则见 `CLAUDE.md`「代码注释」）。所以章节编号只增不改（见上面"章节编号只增不改"）；把代码里原有的说明性注释挪进文档时，内容要完整搬过来，再把注释换成引用。
+- **文档是唯一的说明来源。** 代码注释不重复文档内容，只写一行 `See <文档路径> §<章节>`（规则见 `CLAUDE.md`「代码注释」）。所以章节编号只增不改（见上面"章节编号只增不改"）；把代码里原有的说明性注释挪进文档时，内容要完整搬过来，再把注释换成引用。
 - 加粗只给关键句；并列信息用表格，步骤用有序列表；代码块只放接口、数据结构、配置片段和流程示意。
 - 日期一律写成 `YYYY-MM-DD`。不写"本文档旨在""综上所述"这类空话。
-- 文件开头：`# <模块中文名>：技术实现`，下一行 `> 相关：[模块说明](README.md) · [施工计划](plan.md) · …`（只链接存在的文件）。跨模块链接用相对路径 `../toolchain/tech.md`。
+- 文件开头：`# <模块中文名>：技术实现`，下一行 `> 相关：[模块说明](README.md) · [施工计划](plan.md) · …`（只链接存在的文件）。跨模块链接用相对路径，如 `../auth/tech.md`；和维护类 skill 之间的链接写法见 §8。
 
 ## 7. 提交
 
 - 代码提交顺带更新受影响的文档（plan.md 的阶段状态、tech.md 里变了的细节、verification.md 的检查表），和代码放在同一个提交里，这样文档不会和代码对不上。
 - 只改文档时，提交信息用 `docs: <英文短句>`，如 `docs: record the type-aware lint results`（格式规则见 `CLAUDE.md`「Git 提交约定」）。
+
+## 8. 项目维护类 skill
+
+构建与依赖、代码规范与格式化、提交流程、文档体系这类模板自带的东西，不在 `apps/docs/` 建模块，写成 skill：
+
+```
+.claude/skills/<name>/
+  SKILL.md                  # 操作指南（必有）
+  references/
+    tech.md                 # 写法同功能模块的 tech.md（§3）
+    plan.md                 # 同 §4
+    verification.md         # 同 §5
+    probe-<主题>.md         # 可选
+```
+
+- **SKILL.md 是操作指南。** Claude 碰到相关任务时会整篇加载，所以要短，只写现在怎么做：常用命令、按场景分的步骤（"装依赖时报 X""改规则"）、改完要跑的检查、改完要记到哪。理由一句话带过，链到 `references/tech.md` 的章节。
+- SKILL.md 末尾依次是 `## 关键决定`（写法同模块 README，带出处和链接）、`## 参考资料`（`| 文件 | 内容 |`，代替模块 README 的"文件"表）、`## 相关`（别的 skill 写名字，功能模块写链接）。
+- frontmatter 只有 `name`（等于目录名）和 `description`。`description` 写"管什么 + 什么时候用"，带上关键名词（文件名、命令、报错）：Claude 靠它决定要不要加载。它常驻上下文，要比功能模块的 description 更精炼。
+- 没有总索引，也没有 `changes`、`status`、`code`。施工日期看 `references/plan.md` 的日期小节。
+- `references/` 里的文件开头写 `> 相关：[操作指南](../SKILL.md) · [技术实现](tech.md) · …`。代码注释引用写 `See .claude/skills/<name>/references/<文件>.md §<章节>`，编号规则同 §3"章节编号只增不改"，`pnpm docs:check-refs` 一样会检查。
+- 链接一律用相对路径。从 `references/` 链到别的 skill：`../../lint-format/references/tech.md`；链到功能模块：`../../../../apps/docs/<module>/README.md`。从 `SKILL.md` 出发少一层 `../`。功能模块链到 skill：`../../../.claude/skills/<name>/SKILL.md`。
+- 一次维护类施工记在对应 skill 的 `references/plan.md`；改了操作方式（命令、步骤、报错处理）时同步改 SKILL.md。
+
+## 9. 关键决定
+
+- 本 skill 和两个检查脚本从 ludict 项目移植过来，按本仓库改写（用户要求，2026-10-21，见 [tech.md §5](references/tech.md#5-从-ludict-移植时改了什么2026-10-21)）
+- 模板没有版本号，所有"版本"位置改用日期 `YYYY-MM-DD`，frontmatter 字段叫 `changes`（用户拍板，2026-10-21，见 [tech.md §5](references/tech.md#5-从-ludict-移植时改了什么2026-10-21)）
+- 说明只写在文档里，代码注释只留一行引用；现有注释不批量清理，改到哪挪到哪（用户拍板，2026-10-21，见 [tech.md §4](references/tech.md#4-代码注释约定2026-10-212026-11-01-修订)）
+- 仓库没有 CI，文档检查并进 `pnpm lint`（2026-10-21，见 [tech.md §1](references/tech.md#1-目录结构与读法2026-10-212026-11-01-修订)）
+- 项目维护类文档从 `apps/docs/` 搬进对应 skill 的 `references/`，`apps/docs/` 只放业务功能（用户提出，2026-11-01，见 [tech.md §7](references/tech.md#7-维护类文档放进-skill2026-11-01)）
+
+## 10. 参考资料
+
+| 文件                                    | 内容                                                                                                                                                                                                         |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [templates.md](references/templates.md) | 每种文件的骨架，含维护类 skill 的 SKILL.md                                                                                                                                                                   |
+| [tech.md](references/tech.md)           | 文档体系本身：§1 目录结构、读法、三个命令；§2 索引脚本 `scripts/docs/index.mjs`；§3 引用和链接检查 `scripts/docs/check-refs.mjs`；§4 代码注释约定；§5 和 ludict 原版的差异；§6 风险；§7 维护类文档放进 skill |
+| [plan.md](references/plan.md)           | 文档体系的施工记录：2026-10-21 从 ludict 移植、改写原来的 ADR；2026-10-22 按 code review 修 `check-refs.mjs`；2026-11-01 维护类文档搬进 skill                                                                |

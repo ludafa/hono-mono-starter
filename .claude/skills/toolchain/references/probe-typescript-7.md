@@ -61,6 +61,6 @@ TS 7 删掉了 6.0 里标为废弃的选项（`baseUrl`、`moduleResolution: nod
 ## 4. 对设计的建议
 
 1. 现在就能升：两个 app 的 `typescript` 改成 `^7.0.2`，删掉工作区设置里的 `typescript.tsdk`，推荐 `TypeScriptTeam.native-preview`。
-2. 升了以后可以开类型感知 lint（[lint-format tech.md §3.4](../lint-format/tech.md#34-类型感知规则未开启)）。用户已经决定暂时不开（2026-10-21）。
+2. 升了以后可以开类型感知 lint（[lint-format tech.md §3.4](../../lint-format/references/tech.md#34-类型感知规则未开启)）。用户已经决定暂时不开（2026-10-21）。
 3. 以后要引入依赖老 Compiler API 的工具时，用官方 alias 让 6 和 7 并存：`"typescript": "npm:@typescript/typescript6"` + `"@typescript/native": "npm:typescript@^7"`。
-4. 调研时顺带发现 Kubb 生成的代码不再被格式化。这和 TS 无关，是删掉 Prettier 的后遗症，已经修好（[lint-format plan.md 阶段 3](../lint-format/plan.md#阶段-3kubb-生成代码没有格式化claude-发现计划外)）。
+4. 调研时顺带发现 Kubb 生成的代码不再被格式化。这和 TS 无关，是删掉 Prettier 的后遗症，已经修好（[lint-format plan.md 阶段 3](../../lint-format/references/plan.md#阶段-3kubb-生成代码没有格式化claude-发现计划外)）。

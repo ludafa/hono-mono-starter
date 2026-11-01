@@ -1,6 +1,6 @@
 # 代码规范与格式化：施工计划
 
-> 相关：[模块说明](README.md) · [技术实现](tech.md) · [验证方案](verification.md)
+> 相关：[操作指南](../SKILL.md) · [技术实现](tech.md) · [验证方案](verification.md)
 
 ## 2026-10-21（分支 `ludafa/add-oxlint-eslint-config`）
 
@@ -22,7 +22,7 @@
 
 ### 阶段 3：Kubb 生成代码没有格式化（Claude 发现，计划外）
 
-- 现象：做 [TS 7 调研](../toolchain/probe-typescript-7.md)时重新跑 `generate:api`，20 个生成文件全部变化（增 184 行、删 296 行）：没有分号、长行不折行、文件末尾没有换行。
+- 现象：做 [TS 7 调研](../../toolchain/references/probe-typescript-7.md)时重新跑 `generate:api`，20 个生成文件全部变化（增 184 行、删 296 行）：没有分号、长行不折行、文件末尾没有换行。
 - 原因：Kubb 的 `output.format` 默认用 Prettier，阶段 1 删掉 Prettier 后这一步静默跳过。和 TS 版本无关。
 - 实际改动：`apps/client/kubb.config.ts` 加 `format: 'oxfmt'`；`.oxfmtrc.json` 去掉对 `apps/client/src/gen/**` 的忽略（[tech.md §5](tech.md#5-生成文件2026-10-21)）。
 - 检查：重新生成后只剩 4 个文件的 import 顺序变化（项目排序规则带来的预期变化），再生成一次没有新 diff；`pnpm lint` 通过。
@@ -58,12 +58,12 @@
 
 ### 阶段 7：改写成模块文档
 
-- 原 `apps/docs/decisions/0003-oxlint-oxfmt-replace-eslint-prettier.md` 改写成本模块；`.oxlintrc.json` 的规则分组说明、`kubb.config.ts` 的 `format: 'oxfmt'` 改成文档引用。见 [文档体系的施工计划](../doc-system/plan.md)。
+- 原 `apps/docs/decisions/0003-oxlint-oxfmt-replace-eslint-prettier.md` 改写成本模块；`.oxlintrc.json` 的规则分组说明、`kubb.config.ts` 的 `format: 'oxfmt'` 改成文档引用。见 [文档体系的施工计划](../../feature-docs/references/plan.md)。
 - 状态：✅ 完成（2026-10-21）
 
 ## 2026-10-22（分支 `ludafa/add-oxlint-eslint-config`）
 
-起因：用户跑了 `/code-review high`，报出 10 条问题；逐条核实后用户要求「10 条都修复」。本模块管其中 6 条（1、4、6、7、8、9），其余 4 条是文档检查脚本的问题，记在 [文档体系的施工计划](../doc-system/plan.md)。
+起因：用户跑了 `/code-review high`，报出 10 条问题；逐条核实后用户要求「10 条都修复」。本模块管其中 6 条（1、4、6、7、8、9），其余 4 条是文档检查脚本的问题，记在 [文档体系的施工计划](../../feature-docs/references/plan.md)。
 
 ### 阶段 1：共用脚本，绕开 `prefer-const` 的 bug（review 第 1、8 条）
 
@@ -99,3 +99,7 @@
 - 文件：`.husky/pre-commit`、[tech.md §8、§9](tech.md#9-pre-commit-钩子2026-10-22)、[verification.md](verification.md)、本模块 README、CLAUDE.md（Git 一节）。
 - 状态：✅ 完成（2026-10-23）
 - 检查：读 lint-staged 17.6.0 的源码，确认 `--no-stash` 只关掉备份和出错时的自动恢复，隐藏没暂存的改动不受影响；然后在临时仓库里和默认模式逐项对比，结果见 [verification.md 2026-10-23](verification.md#2026-10-23)。
+
+## 2026-11-01（分支 `docs/maintenance-skills`）
+
+本模块的文档从 `apps/docs/lint-format/` 搬进本 skill 的 `references/`，原来的 README 改写成 [SKILL.md](../SKILL.md) 的操作指南。施工记录在 [文档体系的施工计划](../../feature-docs/references/plan.md#2026-11-01分支-docsmaintenance-skills)。

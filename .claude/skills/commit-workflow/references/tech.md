@@ -1,6 +1,6 @@
 # 提交流程：技术实现
 
-> 相关：[模块说明](README.md) · [施工计划](plan.md) · [验证方案](verification.md)
+> 相关：[操作指南](../SKILL.md) · [施工计划](plan.md) · [验证方案](verification.md)
 
 ## 1. 选型（2026-07-19）
 
@@ -27,7 +27,7 @@
 - husky v9：`.husky/commit-msg` 的内容是 `pnpm exec commitlint --edit "$1"`，由 husky 的 `.husky/_/commit-msg` 包装器在 commit-msg 阶段调用。
 - `husky init` 顺带生成的 `pre-commit`（跑 `pnpm test`）已删除：对 starter 来说每次提交都跑全量测试太重，也会让用这个模板的人意外。
 
-  > 2026-07-19 → 2026-10-22 修订：现在又有了 `.husky/pre-commit`，但它只用 lint-staged 修复和格式化暂存的文件，不跑测试，不到 1 秒（见 [lint-format tech.md §9](../lint-format/tech.md#9-pre-commit-钩子2026-10-22)）。
+  > 2026-07-19 → 2026-10-22 修订：现在又有了 `.husky/pre-commit`，但它只用 lint-staged 修复和格式化暂存的文件，不跑测试，不到 1 秒（见 [lint-format tech.md §9](../../lint-format/references/tech.md#9-pre-commit-钩子2026-10-22)）。
 
 - 根 `package.json` 的 `"prepare": "husky"`：clone 之后 `pnpm install` 会自动激活钩子。CI 里如果因为 `--ignore-scripts` 之类的原因报错，设 `HUSKY=0` 关掉。
 - 依赖装在根目录（`pnpm add -Dw`）：`@commitlint/cli`、`@commitlint/config-conventional`、`husky`，不装进子包。

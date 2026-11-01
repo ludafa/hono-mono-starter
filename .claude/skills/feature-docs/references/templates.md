@@ -1,6 +1,50 @@
 # 文档骨架
 
-把 `<…>` 换成实际内容。章节是常见结构，没内容的删掉，不要留空标题。真实样例见 `apps/docs/lint-format/`（完整模块）、`apps/docs/toolchain/`（含调研）、`apps/docs/doc-system/`（只有 README + tech + plan 的小模块）。
+把 `<…>` 换成实际内容。章节是常见结构，没内容的删掉，不要留空标题。真实样例见 `apps/docs/dev-auto-login/`（完整的功能模块）、`.claude/skills/lint-format/`（完整的维护类 skill）、`.claude/skills/toolchain/references/probe-typescript-7.md`（调研）、`.claude/skills/feature-docs/references/`（只有 tech + plan）。
+
+## 维护类 skill 的 SKILL.md
+
+`references/` 里的 tech / plan / verification / probe 用下面同名的骨架，只是开头的"相关"行把 `[模块说明](README.md)` 换成 `[操作指南](../SKILL.md)`。
+
+```markdown
+---
+name: <目录名>
+description: <中文名>的操作指南和设计记录：<管什么，带关键名词：配置文件、命令、工具名>。<什么时候用：改 X、升级 Y、报 Z 错时>使用。
+---
+
+# <中文名>
+
+<现状 2～4 句：用的是什么、配置在哪、日常要不要管。>
+
+## <场景 A，如"装依赖、升依赖">
+
+1. <步骤，具体到命令和文件>
+2. <踩过的坑写成规则，理由一句话，链到 [tech.md §N](references/tech.md#…)>
+
+## <场景 B，如"pnpm lint 报错时">
+
+## 改完要跑
+
+- <检查命令>
+- 记录：在 [references/plan.md](references/plan.md) 加一个日期小节，[references/tech.md](references/tech.md) 里变了的地方一起改。
+
+## 关键决定
+
+- <一句结论>（YYYY-MM-DD，见 [tech.md §1](references/tech.md#1-选型yyyy-mm-dd)）
+
+## 参考资料
+
+| 文件                                          | 内容           |
+| --------------------------------------------- | -------------- |
+| [tech.md](references/tech.md)                 | <各章节讲什么> |
+| [plan.md](references/plan.md)                 | <施工记录>     |
+| [verification.md](references/verification.md) | <…>            |
+
+## 相关
+
+- `<另一个 skill>`：<关系>
+- [<功能模块中文名>](../../../apps/docs/<module>/README.md)：<关系>
+```
 
 ## README.md（模块入口）
 

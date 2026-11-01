@@ -1,4 +1,4 @@
-// See apps/docs/doc-system/tech.md §2.
+// See .claude/skills/feature-docs/references/tech.md §2.
 import { spawnSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -19,7 +19,7 @@ const Meta = z.object({
 
 const unquote = (value) => value.replace(/^(["'])(.*)\1$/, '$2');
 
-// See apps/docs/doc-system/tech.md §2.1.
+// See .claude/skills/feature-docs/references/tech.md §2.1.
 function parseFrontmatter(raw, file) {
   const text = raw.replace(/\r\n/g, '\n');
   const match = /^---\n([\s\S]*?)\n---\n/.exec(text);
@@ -63,7 +63,7 @@ function parseFrontmatter(raw, file) {
   return parsed.data;
 }
 
-// See apps/docs/doc-system/tech.md §2.2.
+// See .claude/skills/feature-docs/references/tech.md §2.2.
 const modules = readdirSync(DOCS, { withFileTypes: true })
   .filter(
     (entry) =>
@@ -95,6 +95,8 @@ const lines = [
   '',
   '文档按功能模块组织。先在下表找到模块，再打开它的 `README.md`：里面有概要、关键决定，以及本模块每个文件讲什么。写文档的规则见 [`.claude/skills/feature-docs`](../../.claude/skills/feature-docs/SKILL.md)。',
   '',
+  '项目维护类的说明（构建与依赖、代码规范与格式化、提交流程、文档体系本身）不在这里，在 [`.claude/skills/`](../../.claude/skills/) 下对应的 skill 里：`SKILL.md` 是操作指南，`references/` 放设计和施工记录。',
+  '',
   '| 模块 | 管什么 | 施工日期 | 状态 |',
   '| ---- | ------ | -------- | ---- |',
   ...modules.map(
@@ -115,7 +117,7 @@ for (const date of dates) {
   );
 }
 
-// See apps/docs/doc-system/tech.md §2.3.
+// See .claude/skills/feature-docs/references/tech.md §2.3.
 const formatted = spawnSync(
   'node_modules/.bin/oxfmt',
   ['--stdin-filepath', INDEX],

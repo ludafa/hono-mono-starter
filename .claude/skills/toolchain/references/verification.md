@@ -1,6 +1,6 @@
 # 构建与依赖：验证方案
 
-> 相关：[模块说明](README.md) · [技术实现](tech.md) · [可行性调研：TypeScript 7](probe-typescript-7.md) · [施工计划](plan.md)
+> 相关：[操作指南](../SKILL.md) · [技术实现](tech.md) · [可行性调研：TypeScript 7](probe-typescript-7.md) · [施工计划](plan.md)
 
 ## 1. 自动测试
 
