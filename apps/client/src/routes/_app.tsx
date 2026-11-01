@@ -11,8 +11,23 @@ export const Route = createFileRoute('/_app')({
   ),
   beforeLoad: async () => {
     const session = await authClient.getSession();
-    if (!session.data) {
-      throw redirect({ to: '/login' });
+    if (session.data) {
+      return;
     }
+    // See apps/docs/dev-auto-login/tech.md §4.3.
+    if (import.meta.env.VITE_DEV_AUTO_LOGIN && !session.error) {
+      try {
+        const { error } = await authClient.devSignIn();
+        if (!error) {
+          return;
+        }
+        console.warn(
+          `DEV_AUTO_LOGIN: dev sign-in failed (HTTP ${error.status}); see the server log`,
+        );
+      } catch (error) {
+        console.warn('DEV_AUTO_LOGIN: dev sign-in request failed', error);
+      }
+    }
+    throw redirect({ to: '/login' });
   },
 });

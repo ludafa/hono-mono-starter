@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   // Load shared config from the repo root .env (see <repo>/.env.example).
   // Server-only secrets in apps/server/.env are NOT read here — and even if
   // the path were widened, only `VITE_*` vars are exposed to the client bundle.
@@ -37,12 +37,14 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    // In dev, leave VITE_API_URL unset so the client uses relative `/api/*`
-    // paths and goes through the proxy above (same-origin, no CORS preflight).
-    define: isDev
-      ? {}
-      : {
-          'import.meta.env.VITE_API_URL': JSON.stringify(serverUrl),
-        },
+    // See apps/docs/dev-auto-login/tech.md §4.1.
+    define: {
+      'import.meta.env.VITE_DEV_AUTO_LOGIN': JSON.stringify(
+        command === 'serve' && env.DEV_AUTO_LOGIN === 'true',
+      ),
+      ...(isDev
+        ? {}
+        : { 'import.meta.env.VITE_API_URL': JSON.stringify(serverUrl) }),
+    },
   };
 });

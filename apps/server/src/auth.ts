@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 
 import { db } from './db/instance.js';
+import { devAutoLoginEnabled, devLogin } from './dev-login.js';
 
 const clientUrl =
   process.env.CLIENT_URL ??
@@ -24,5 +25,6 @@ export const auth = betterAuth({
           },
         }
       : undefined,
+  plugins: devAutoLoginEnabled ? [devLogin()] : [],
   trustedOrigins,
 });
