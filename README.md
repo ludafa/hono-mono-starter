@@ -96,3 +96,5 @@ apps/
 ## Claude Code
 
 This template ships with a `.claude/skills/` directory designed to make Claude Code productive in a fresh project. Skills cover: bootstrap, adding endpoints, adding DB tables, adding pages, refreshing the API client, and renaming the template. Open the project in Claude Code and Claude will pick them up automatically.
+
+Project maintenance lives in skills too: `toolchain` (dependencies, Vite, pnpm, TypeScript), `lint-format` (Oxlint / Oxfmt) and `commit-workflow` (commitlint, husky). Each `SKILL.md` is the how-to; its `references/` folder holds the design notes and build log behind it. Feature design docs for the app itself go in `apps/docs/` (index: `apps/docs/README.md`), written with the `feature-docs` skill.

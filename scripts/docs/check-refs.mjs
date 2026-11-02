@@ -1,12 +1,13 @@
-// See apps/docs/doc-system/tech.md §3.
+// See .claude/skills/feature-docs/references/tech.md §3.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, normalize } from 'node:path';
 
-const DOCS = 'apps/docs/';
+// See .claude/skills/feature-docs/references/tech.md §7.
+const DOC_DIR = /^(?:apps\/docs|\.claude\/skills\/[\w-]+\/references)\//;
 const problems = [];
 
-// See apps/docs/doc-system/tech.md §3.4.
+// See .claude/skills/feature-docs/references/tech.md §3.4.
 if (
   spawnSync('git', ['rev-parse', '--is-inside-work-tree'], { stdio: 'ignore' })
     .status !== 0
@@ -15,7 +16,7 @@ if (
   process.exit(0);
 }
 
-// See apps/docs/doc-system/tech.md §3.1.
+// See .claude/skills/feature-docs/references/tech.md §3.1.
 function git(args) {
   try {
     return execFileSync('git', args, {
@@ -68,7 +69,7 @@ function sectionsOf(doc) {
   return sectionCache.get(doc);
 }
 
-// See apps/docs/doc-system/tech.md §3.3.
+// See .claude/skills/feature-docs/references/tech.md §3.3.
 const anchorCache = new Map();
 function anchorsOf(doc) {
   if (!anchorCache.has(doc)) {
@@ -89,7 +90,7 @@ function anchorsOf(doc) {
   return anchorCache.get(doc);
 }
 
-// See apps/docs/doc-system/tech.md §3.3.
+// See .claude/skills/feature-docs/references/tech.md §3.3.
 function resolveLink(file, url) {
   const [path, anchor = ''] = url.split('#');
   const decoded = decodeURI(path);
@@ -102,8 +103,9 @@ function resolveLink(file, url) {
   return { target, anchor: decodeURIComponent(anchor).toLowerCase() };
 }
 
-// See apps/docs/doc-system/tech.md §3.1.
-const REF = /See (apps\/docs\/[\p{L}\p{N}_./-]+\.md)(?: §([\w.-]+))?/gu;
+// See .claude/skills/feature-docs/references/tech.md §3.1.
+const REF =
+  /See ((?:apps\/docs|\.claude\/skills\/[\w-]+\/references)\/[\p{L}\p{N}_./-]+\.md)(?: §([\w.-]+))?/gu;
 let refs = 0;
 const hits = git([
   'grep',
@@ -111,10 +113,11 @@ const hits = git([
   '-nI',
   '--untracked',
   '-E',
-  'See apps/docs/',
+  'See (apps/docs|\\.claude/skills/[a-z0-9-]+/references)/',
   '--',
   '.',
   ':!apps/docs',
+  ':!.claude/skills/*/references/*',
 ]);
 for (const hit of hits.split('\n').filter(Boolean)) {
   const [file, line, text] = hit.split('\0');
@@ -146,8 +149,8 @@ const markdown = git([
     (file) => file && existsSync(file) && !file.startsWith('node_modules/'),
   );
 
-// See apps/docs/doc-system/tech.md §3.2.
-for (const doc of markdown.filter((file) => file.startsWith(DOCS))) {
+// See .claude/skills/feature-docs/references/tech.md §3.2.
+for (const doc of markdown.filter((file) => DOC_DIR.test(file))) {
   for (const [number, times] of sectionsOf(doc)) {
     if (times > 1) {
       problems.push(`${doc}: section §${number} appears ${times} times`);
@@ -155,7 +158,7 @@ for (const doc of markdown.filter((file) => file.startsWith(DOCS))) {
   }
 }
 
-// See apps/docs/doc-system/tech.md §3.3.
+// See .claude/skills/feature-docs/references/tech.md §3.3.
 let links = 0;
 for (const file of markdown) {
   let fenced = false;

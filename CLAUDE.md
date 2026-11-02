@@ -13,24 +13,30 @@ Module type: ESM. Package manager: pnpm. Node imports use `.js` extensions for T
 
 ## 文档
 
-设计和施工记录在 `apps/docs/`，按功能模块组织。动手改某个功能前，先看索引 `apps/docs/README.md`，再打开对应模块的 `README.md`，按需读里面的 `product.md` / `tech.md` / `plan.md` / `verification.md` / `probe-*.md`；不要整目录通读。
+设计和施工记录分两处，都按需读，不要整目录通读：
 
-写或更新文档时用 `feature-docs` skill。已有章节的编号不改（代码注释靠编号引用）；新功能的章节追加在文档末尾，编号取最大编号 + 1。改了模块 `README.md` 的头部后运行 `pnpm docs:index` 重新生成索引（`pnpm lint` 会检查）。
+- **业务功能**在 `apps/docs/`，按功能模块组织。动手改某个功能前，先看索引 `apps/docs/README.md`，再打开对应模块的 `README.md`，按需读里面的 `product.md` / `tech.md` / `plan.md` / `verification.md` / `probe-*.md`。
+- **项目维护**（构建与依赖、代码规范与格式化、提交流程、文档体系本身）在对应的 skill 里：`toolchain`、`lint-format`、`commit-workflow`、`feature-docs`。`SKILL.md` 是操作指南，`references/` 下放同样格式的 `tech.md` / `plan.md` / `verification.md` / `probe-*.md`。
+
+写或更新这两处的文档都用 `feature-docs` skill。已有章节的编号不改（代码注释靠编号引用）；新功能的章节追加在文档末尾，编号取最大编号 + 1。改了模块 `README.md` 的头部后运行 `pnpm docs:index` 重新生成索引（`pnpm lint` 会检查）。
 
 ## 代码注释
 
-功能、实现思路、设计理由、施工过程都只写在 `apps/docs/` 里，注释里不写。同一件事如果在文档和注释里各写一份，迟早会有一份过时。
+功能、实现思路、设计理由、施工过程都只写在文档里（`apps/docs/` 或维护类 skill 的 `references/`），注释里不写。同一件事如果在文档和注释里各写一份，迟早会有一份过时。
 
-- 需要说明时，注释里只写一行指向文档的引用，格式固定为 `See apps/docs/<模块>/<文件>.md §<章节>`，例如 `// See apps/docs/lint-format/tech.md §5.`。文档里还没有这段内容，就先补进文档，再写引用。
+- 需要说明时，注释里只写一行指向文档的引用，格式固定为 `See apps/docs/<模块>/<文件>.md §<章节>` 或 `See .claude/skills/<skill>/references/<文件>.md §<章节>`，例如 `// See .claude/skills/lint-format/references/tech.md §5.`。文档里还没有这段内容，就先补进文档，再写引用。
 - 以下内容可以留在代码里：给工具看的指令，例如 `oxlint-disable-next-line`、`@ts-expect-error`，后面跟一句原因；以及 `TODO(<日期>)`。
 - 现有代码里已经有不少说明性注释，暂时不批量清理。改到哪一段，就把那一段的说明挪进对应文档，在原处换成引用。
-- 移动或重命名文档时，用 `grep -rn "apps/docs/" apps scripts .claude *.json *.md` 找出所有引用一起改；`pnpm docs:check-refs` 会报出失效的引用和链接。
+- 移动或重命名文档时，用 `git grep -nE "apps/docs/|\.claude/skills/"` 找出所有引用一起改；`pnpm docs:check-refs` 会报出失效的引用和链接（包括文档之间的相对链接）。
 
 ## Skills available
 
 The `.claude/skills/` directory ships with skills for the most common tasks. Each skill describes a workflow you should follow exactly when its trigger fires. Each skill is a folder `.claude/skills/<name>/SKILL.md` with `name` + `description` frontmatter — a flat `.claude/skills/<name>.md` file is not picked up by Claude Code.
 
-- `feature-docs` — write or update docs under `apps/docs/` (module layout, frontmatter, section numbering, writing style)
+- `feature-docs` — write or update docs: feature modules under `apps/docs/` and the `references/` of the maintenance skills below (layout, frontmatter, section numbering, writing style); its own `references/` documents the docs system
+- `toolchain` — add or upgrade dependencies, upgrade Vite / pnpm / TypeScript, pnpm settings in `pnpm-workspace.yaml`
+- `lint-format` — change Oxlint / Oxfmt rules, work through `pnpm lint` errors, ignore new codegen output, upgrade the linters
+- `commit-workflow` — maintain commitlint and the husky hooks, or add a release flow (day-to-day commits use `/commit` and `/split-commits`)
 - `bootstrap` — first-run setup (env file, drizzle migrate, openapi spec, kubb client)
 - `add-api-endpoint` — full server-to-client endpoint flow, including codegen refresh
 - `add-db-table` — add a Drizzle table and run `db:generate` + `db:migrate`
@@ -65,16 +71,16 @@ These are load-bearing — change them only with the user's explicit go-ahead.
 
 ### Tooling
 
-- **Code style is automated — don't spend effort on it.** A PostToolUse hook runs `scripts/format.sh` (`oxlint --fix` + `oxfmt`) on every file you edit (formatting, import/Tailwind order, `curly`, `one-var`). `pnpm format` does the same repo-wide, and the pre-commit hook does it for staged files. Config lives only in the root `.oxlintrc.json` / `.oxfmtrc.json`; client-only rules go in the `apps/client/**` override. Rationale: [`apps/docs/lint-format/`](apps/docs/lint-format/README.md).
+- **Code style is automated — don't spend effort on it.** A PostToolUse hook runs `scripts/format.sh` (`oxlint --fix` + `oxfmt`) on every file you edit (formatting, import/Tailwind order, `curly`, `one-var`). `pnpm format` does the same repo-wide, and the pre-commit hook does it for staged files. Config lives only in the root `.oxlintrc.json` / `.oxfmtrc.json`; client-only rules go in the `apps/client/**` override. How to change the rules, and why they are what they are: the [`lint-format`](.claude/skills/lint-format/SKILL.md) skill.
 - **Before finishing, run `pnpm lint` and `pnpm typecheck`** and fix what's left (strict TS with `verbatimModuleSyntax`: use `import type`). Suppress a rule with `// oxlint-disable-next-line <rule>`.
 - **Kubb's `src/gen/**` must stay formatted by oxfmt** (`kubb.config.ts` → `format: 'oxfmt'`); don't add it to `.oxfmtrc.json`'s `ignorePatterns`. Other codegen output (`routeTree.gen.ts`, `drizzle/**`) is ignored by both configs — add new codegen output there too.
 
 ## Git 提交约定
 
 - **Commit message 用 [Conventional Commits](https://www.conventionalcommits.org/)。** `type(scope): subject` —— `feat` / `fix` / `docs` / `refactor` / `chore` / `test` / `build` / `ci`。scope 用受影响的包（`server` / `client` / `docs`），跨多包或全局改动可省略。一次 commit 只做一件事。
-- **格式由 commitlint 机器兜底。** 根 `commitlint.config.js`（`@commitlint/config-conventional`）+ husky 的 `.husky/commit-msg` 钩子会在每次提交时校验 message，格式不对直接拦下。`.husky/pre-commit` 用 lint-staged 对暂存文件跑 `scripts/format.sh`，只修复和格式化，不跑测试；加了 `--no-stash`，不碰共用的 stash 列表，开头那行 "might result in data loss" 警告可以忽略（见 [`apps/docs/lint-format/tech.md` §9](apps/docs/lint-format/tech.md#9-pre-commit-钩子2026-10-22)）。**不要用 `--no-verify` 绕过钩子。**
+- **格式由 commitlint 机器兜底。** 根 `commitlint.config.js`（`@commitlint/config-conventional`）+ husky 的 `.husky/commit-msg` 钩子会在每次提交时校验 message，格式不对直接拦下。`.husky/pre-commit` 用 lint-staged 对暂存文件跑 `scripts/format.sh`，只修复和格式化，不跑测试；加了 `--no-stash`，不碰共用的 stash 列表，开头那行 "might result in data loss" 警告可以忽略（见 [`lint-format` 的 tech.md §9](.claude/skills/lint-format/references/tech.md#9-pre-commit-钩子2026-10-22)）。**不要用 `--no-verify` 绕过钩子。**
 - **钩子对 clone 者自动生效。** 根 `package.json` 的 `"prepare": "husky"` 在 `pnpm install` 后自动激活 husky，无需手动 `husky init`。CI 里若因 `--ignore-scripts` 报错，设 `HUSKY=0` 禁用即可。husky 属于**根** `package.json`，不装进子包。
-- **版本与 changelog 暂不由提交流程管理。** 本仓库三个包都是 `private: true` 的应用，不发 registry，故**没有引入 changesets**——commit message 只影响历史可读性，不决定版本号。若将来在 `packages/*` 放要发布的包，再评估是否引入 changesets（见 [`apps/docs/commit-workflow/`](apps/docs/commit-workflow/README.md)）。
+- **版本与 changelog 暂不由提交流程管理。** 本仓库三个包都是 `private: true` 的应用，不发 registry，故**没有引入 changesets**——commit message 只影响历史可读性，不决定版本号。若将来在 `packages/*` 放要发布的包，再评估是否引入 changesets（见 [`commit-workflow`](.claude/skills/commit-workflow/SKILL.md) skill）。
 - **提交流程由 slash command 驱动：**
   - `/commit` —— 分析已 staged 的改动、确定 type/scope、写 message、提交（不自作主张 `git add` 全部）。
   - `/split-commits` —— 把攒在工作区的一坨改动拆成多个语义清晰的 commit（`git add -p` 分批 stage）。

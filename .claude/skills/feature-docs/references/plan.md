@@ -1,6 +1,6 @@
 # 文档体系：施工计划
 
-> 相关：[模块说明](README.md) · [技术实现](tech.md)
+> 相关：[操作指南](../SKILL.md) · [技术实现](tech.md)
 
 ## 2026-10-21（分支 `ludafa/add-oxlint-eslint-config`）
 
@@ -25,13 +25,13 @@
 - 状态：✅ 完成（2026-10-21）
 - 原内容的去向：
 
-| 原文件                                                                  | 去向                                                                                     |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `decisions/0001-vite-rolldown-upgrade-and-pnpm11-config.md`             | [toolchain](../toolchain/README.md)：tech.md §1～§2、plan.md 2026-07-19、verification.md |
-| `decisions/0002-commit-workflow-commitlint-no-changesets.md`            | [commit-workflow](../commit-workflow/README.md)：全部                                    |
-| `decisions/0003-oxlint-oxfmt-replace-eslint-prettier.md`                | [lint-format](../lint-format/README.md)：全部，并补上之后几轮的改动                      |
-| 本会话的 TypeScript 7 调研（原来只在对话里）                            | [toolchain/probe-typescript-7.md](../toolchain/probe-typescript-7.md)                    |
-| 原 `apps/docs/README.md`（features / solutions / decisions 的写法说明） | 被 feature-docs skill 取代                                                               |
+| 原文件                                                                  | 去向                                                                                       |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `decisions/0001-vite-rolldown-upgrade-and-pnpm11-config.md`             | [toolchain](../../toolchain/SKILL.md)：tech.md §1～§2、plan.md 2026-07-19、verification.md |
+| `decisions/0002-commit-workflow-commitlint-no-changesets.md`            | [commit-workflow](../../commit-workflow/SKILL.md)：全部                                    |
+| `decisions/0003-oxlint-oxfmt-replace-eslint-prettier.md`                | [lint-format](../../lint-format/SKILL.md)：全部，并补上之后几轮的改动                      |
+| 本会话的 TypeScript 7 调研（原来只在对话里）                            | [toolchain/probe-typescript-7.md](../../toolchain/references/probe-typescript-7.md)        |
+| 原 `apps/docs/README.md`（features / solutions / decisions 的写法说明） | 被 feature-docs skill 取代                                                                 |
 
 - 偏差：ADR 只有"决定 + 后果"，改写时按 skill 拆成 tech（选型和现状）、plan（按日期的施工记录）、verification（检查和实测结果）。ADR 0002 里写的日期是 2026-07-19，实际提交 `9ee5658` 在 2026-07-25，plan.md 按开始日期 2026-07-19 记，注明合入日期。
 
@@ -62,7 +62,7 @@
 
 ## 2026-10-22（分支 `ludafa/add-oxlint-eslint-config`）
 
-起因：用户跑了 `/code-review high`，核实后要求「10 条都修复」。本模块管其中 4 条（2、3、5、10）；其余 6 条记在 [代码规范与格式化的施工计划](../lint-format/plan.md)。
+起因：用户跑了 `/code-review high`，核实后要求「10 条都修复」。本模块管其中 4 条（2、3、5、10）；其余 6 条记在 [代码规范与格式化的施工计划](../../lint-format/references/plan.md)。
 
 ### 阶段 1：修 `check-refs.mjs`
 
@@ -75,3 +75,31 @@
   4. 第 10 条：加 `textOf()` 缓存，每个文件只读一次。
 - 偏差：测试时发现引用正则 `See (apps\/docs\/[\w./-]+\.md)` 匹配不到中文路径，`-z` 修好之后这类引用照样被漏掉。改成 `[\p{L}\p{N}_./-]+` 并加 `u` 标志（Claude 发现，计划外）。
 - 检查：在 scratchpad 里建了一个临时目录，放一份文件名是中文的文档（`apps/docs/中文/说明.md`）和一个引用它 `§9` 的 `引用.ts`。还没 `git init` 时打印跳过提示、退出码 0；`git init` 之后报出全部 5 个问题：中文引用的 `§9` 不存在、`/nope.md` 不存在、两个坏的 `%` 转义、一个不存在的相对链接。指向 `/apps/docs/中文/说明.md#1-选型` 的根路径链接没有报错。仓库里 `pnpm docs:check` 通过。
+
+## 2026-11-01（分支 `docs/maintenance-skills`）
+
+起因：用户提出 toolchain、commit-workflow、lint-format、doc-system 四个模块不算功能文档，更像项目维护的 skill；讨论后用户问「这些模块如果有 skill、让注释指向 skill 不行么」，最后拍板「直接4个都改了吧，一步到位，脚本和引用也都改」。方案对比见 [tech.md §7](tech.md#7-维护类文档放进-skill2026-11-01)。
+
+### 阶段 1：搬文件
+
+- 文件：四个模块的 tech、plan、verification、probe 用 `git mv` 搬进 `.claude/skills/{toolchain,lint-format,commit-workflow,feature-docs}/references/`；toolchain、lint-format、commit-workflow 的 `README.md` 用 `git mv` 变成各自的 `SKILL.md`；删除 `apps/docs/doc-system/README.md`。
+- 状态：✅ 完成（2026-11-01）
+- 实际改动：对照表见 [tech.md §7.1](tech.md#71-对照表)。搬过去的文档内容不变，只把开头"相关"行的 `[模块说明](README.md)` 换成 `[操作指南](../SKILL.md)`，跨模块链接换成新路径（`../lint-format/tech.md` → `../../lint-format/references/tech.md`）。
+
+### 阶段 2：写三个 SKILL.md，改 feature-docs
+
+- 文件：`.claude/skills/{toolchain,lint-format,commit-workflow}/SKILL.md`（改写）、`.claude/skills/feature-docs/SKILL.md`、`references/templates.md`、本文件和 [tech.md](tech.md)。
+- 状态：✅ 完成（2026-11-01）
+- 实际改动：三个 SKILL.md 从"概要 + 关键决定 + 文件表"改成操作指南（按场景分的步骤、改完要跑什么、改完记到哪），关键决定和文件表留在末尾。feature-docs 的 SKILL.md 开头说明两处放法，§1 加"先分功能还是维护"，§2 的示例换成 dev-auto-login，新增 §8 维护类 skill 的写法、§9 关键决定、§10 参考资料；templates.md 加 SKILL.md 骨架。tech.md §1～§4 按新结构修订，新增 §7，风险表加 4 行。
+
+### 阶段 3：脚本和引用
+
+- 文件：`scripts/docs/check-refs.mjs`、`scripts/docs/index.mjs`、`.oxlintrc.json`、`scripts/format.sh`、`apps/client/kubb.config.ts`、CLAUDE.md（文档、代码注释、Skills available、Tooling、Git 提交约定）、根 README（Claude Code 一节）、`apps/docs/dev-auto-login/README.md`（相关模块的链接）、`apps/docs/README.md`（重新生成）。
+- 状态：✅ 完成（2026-11-01）
+- 实际改动：脚本见 [tech.md §7.2](tech.md#72-脚本的改动)。16 处代码注释的路径换成 `.claude/skills/<skill>/references/`，编号不变。CLAUDE.md 里找引用的命令从 `grep -rn "apps/docs/" apps scripts .claude *.json *.md` 换成 `git grep -nE "apps/docs/|\.claude/skills/"`：原来的 `*.json` 匹配不到 `.oxlintrc.json` 这类点开头的文件。
+- 偏差：第一版排除 pathspec 写的是 `':!.claude/skills/*/references'`，实测排除不了里面的文件，改成 `references/*`（Claude 发现）。perl 批量改链接不会触发 PostToolUse hook，两个表格列宽变了的文件被 `oxfmt --check` 报出来，补跑了一次 `scripts/format.sh`。
+
+### 阶段 4：验证
+
+- 状态：✅ 完成（2026-11-01）
+- 检查：`pnpm docs:check-refs` 报 `33 code references, 191 doc links OK`。改脚本、改引用之前跑过一次，报出 6 处失效（CLAUDE.md 4 处、dev-auto-login README 1 处、指向还没写的 §7 的 1 处），和预期一致。故意改坏三处，都被报出、退出码 1，恢复后通过：`.oxlintrc.json` 的引用改成 `§99` → `has no section §99`；toolchain 的 references/tech.md 末尾加一个 `## 2.` → `section §2 appears 2 times`；lint-format SKILL.md 的一个锚点改错 → `has no heading for #22-命令x`。改完后新的三个 skill 立刻出现在 Claude Code 的可用 skill 列表里，description 是新写的。`pnpm lint`、`pnpm typecheck` 通过。

@@ -1,6 +1,6 @@
 # 构建与依赖：技术实现
 
-> 相关：[模块说明](README.md) · [可行性调研：TypeScript 7](probe-typescript-7.md) · [施工计划](plan.md) · [验证方案](verification.md)
+> 相关：[操作指南](../SKILL.md) · [可行性调研：TypeScript 7](probe-typescript-7.md) · [施工计划](plan.md) · [验证方案](verification.md)
 
 ## 1. Vite 8（2026-07-19）
 
@@ -35,7 +35,7 @@
 - **pnpm 10 起不再读 `package.json` 里的 `pnpm` 字段**（`overrides`、`onlyBuiltDependencies` 等，见 <https://pnpm.io/settings>）。原来的 `pnpm.overrides` 一直是静默失效的，client 能用上 rolldown-vite 靠的是它自己的 devDependency 别名。这个字段已删。
 - 配置全部写在 `pnpm-workspace.yaml`：
   - `allowBuilds`：允许跑安装或构建脚本的依赖，pnpm 11 用它取代 `onlyBuiltDependencies`，`pnpm approve-builds` 会改这张表。现在是 `better-sqlite3`（原生模块）、`esbuild`（平台二进制）、`msw`（worker）、`es5-ext`（postinstall），都是 `true`。
-  - `minimumReleaseAgeExclude`：可以绕过 pnpm 发布时间限制的版本（pnpm 会拦下刚发布不久的版本）。现在只有 `hono@4.12.31`。`eslint@10.8.0` 是 2026-07-25 加的，2026-10-21 随 ESLint 一起删掉（见 [lint-format](../lint-format/README.md)）。本仓库没有设置 `minimumReleaseAge`，用的是 pnpm 的默认时长（具体值未确认）。
+  - `minimumReleaseAgeExclude`：可以绕过 pnpm 发布时间限制的版本（pnpm 会拦下刚发布不久的版本）。现在只有 `hono@4.12.31`。`eslint@10.8.0` 是 2026-07-25 加的，2026-10-21 随 ESLint 一起删掉（见 [lint-format](../../lint-format/SKILL.md)）。本仓库没有设置 `minimumReleaseAge`，用的是 pnpm 的默认时长（具体值未确认）。
   - 原来的 `vite` override 已删，不再需要。
 - 根 `package.json`：`"packageManager": "pnpm@11.15.0"`。
 - 坑：在非交互环境里做需要重建 `node_modules` 的全新安装，要加 `CI=true`；改了 overrides 要加 `--no-frozen-lockfile`。
@@ -47,7 +47,7 @@
 - 升级时要做的事：
   1. 两个 app 的 `typescript` 改成 `^7.0.2`。
   2. 删掉 `hono-mono-starter.code-workspace` 里的 `typescript.tsdk` 和 `typescript.enablePromptUseWorkspaceTsdk`（7.0 的包里没有 `lib/tsserver.js`），推荐 VS Code 扩展 `TypeScriptTeam.native-preview`。
-  3. 可选：开类型感知 lint（[lint-format tech.md §3.4](../lint-format/tech.md#34-类型感知规则未开启)）。
+  3. 可选：开类型感知 lint（[lint-format tech.md §3.4](../../lint-format/references/tech.md#34-类型感知规则未开启)）。
 
 ## 4. 风险
 

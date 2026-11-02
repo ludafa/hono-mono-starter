@@ -1,6 +1,6 @@
 # 提交流程：验证方案
 
-> 相关：[模块说明](README.md) · [技术实现](tech.md) · [施工计划](plan.md)
+> 相关：[操作指南](../SKILL.md) · [技术实现](tech.md) · [施工计划](plan.md)
 
 ## 1. 自动测试
 
@@ -29,4 +29,4 @@
 
 ### 2026-10-21
 
-- 在 TS 7 调研的仓库副本里复测：`feat(server): probe` 通过，`bad msg` 退出码 1（[toolchain 的调研](../toolchain/probe-typescript-7.md)）。
+- 在 TS 7 调研的仓库副本里复测：`feat(server): probe` 通过，`bad msg` 退出码 1（[toolchain 的调研](../../toolchain/references/probe-typescript-7.md)）。
