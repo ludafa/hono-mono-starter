@@ -7,6 +7,7 @@
     "generate:api": "kubb generate",
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "typecheck": "tsc -b",
     "preview": "vite preview"
   },
   "dependencies": {
