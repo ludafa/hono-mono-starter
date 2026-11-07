@@ -2,7 +2,7 @@ import { createMiddleware } from 'hono/factory';
 
 import { auth } from '../auth.js';
 
-type AuthEnv = {
+export type AuthEnv = {
   Variables: {
     userId: string;
   };

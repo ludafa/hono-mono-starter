@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 
-import { requireAuth } from '../middleware/auth.js';
+import { type AuthEnv, requireAuth } from '../middleware/auth.js';
 import { ErrorSchema } from '../schemas/api.js';
 
 // ---------------------------------------------------------------------------
@@ -26,8 +26,6 @@ const CreateNoteSchema = z
   .openapi('CreateNoteInput');
 
 type Note = z.infer<typeof NoteSchema>;
-
-type AuthEnv = { Variables: { userId: string } };
 
 const exampleApp = new OpenAPIHono<AuthEnv>();
 
