@@ -2,7 +2,7 @@
 name: lint-format
 title: 代码规范与格式化
 description: 全仓库一套 Oxlint + Oxfmt（根目录 .oxlintrc.json / .oxfmtrc.json，没有 ESLint、Prettier）：规则组成（correctness 分类 + 其余 recommended + curly / one-var）、只在 client 开的 react 规则、import 和 Tailwind class 排序、pnpm lint / format / lint:fix 各做什么、scripts/format.sh 为什么跑两遍 oxlint --fix 且第一遍关掉 prefer-const / no-var、VS Code 的 oxc 扩展、Claude 改文件后自动修复的 PostToolUse hook、提交时用 lint-staged 格式化暂存文件的 pre-commit 钩子（.husky/pre-commit，为什么加 --no-stash）、只对 JS 文件开的 no-undef、Kubb 生成代码的格式化、类型感知规则为什么没开、oxlint prefer-const 自动修复的已知 bug。改 lint 规则或格式化选项、看不懂 pnpm lint 的报错、编辑器保存或提交时的自动格式化不对、想开类型感知规则时来读。
-changes: [2026-10-21, 2026-10-22]
+changes: [2026-10-21, 2026-10-22, 2026-11-04]
 status: 已上线
 code:
   - .oxlintrc.json
@@ -26,7 +26,7 @@ code:
 - 规则 = correctness 分类 + 其余 recommended 显式列出 + `curly: all`、`one-var: never`（后两条用户追加，见 [tech.md §3](tech.md#3-规则组成2026-10-212026-10-22-修订)）
 - 格式化工具不改代码结构，所以 `pnpm format` = 两遍 `oxlint --fix` + `oxfmt`（用户要求"format 出来的也符合 lint"，见 [tech.md §2.2](tech.md#22-命令)）；2026-10-22 收进 `scripts/format.sh`，`pnpm format`、hook、pre-commit 共用（code review 指出，用户要求修复）
 - 代码风格交给 hook，不写进 CLAUDE.md（用户确认，见 [tech.md §6.2](tech.md#62-claude-code-的-posttooluse-hook)）
-- Kubb 生成的 `src/gen/**` 由 oxfmt 格式化，不能加进 oxfmt 的忽略列表（计划外发现，见 [tech.md §5](tech.md#5-生成文件2026-10-21)）
+- Kubb 生成的 `src/gen/**` 由 oxfmt 格式化，不能加进 oxfmt 的忽略列表（计划外发现，见 [tech.md §5](tech.md#5-生成文件2026-10-212026-11-04-修订)）
 - 类型感知规则暂不开：要先升 TypeScript 7（用户拍板"先不加"，见 [tech.md §3.4](tech.md#34-类型感知规则未开启)）
 - oxlint 1.89 的 `prefer-const` 自动修复会改坏多变量的 `let` 声明，已报给上游 [oxc#28003](https://github.com/oxc-project/oxc/issues/28003)；`scripts/format.sh` 第一遍关掉 `prefer-const`、`no-var` 绕开它，遍数不变，编辑器保存时仍会踩（2026-10-22，见 [tech.md §7](tech.md#7-已知问题prefer-const-自动修复2026-10-212026-10-22-修订)）
 - 加 pre-commit 钩子，用 lint-staged 对暂存文件跑 `scripts/format.sh`，只修复和格式化，不跑测试、不拦 lint 错误（code review 指出，用户要求修复，2026-10-22，见 [tech.md §9](tech.md#9-pre-commit-钩子2026-10-22)）；加 `--no-stash`，不往各 worktree 共用的 stash 列表写备份（用户决定，2026-10-23，同上）

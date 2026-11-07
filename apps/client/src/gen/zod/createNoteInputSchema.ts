@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { z } from 'zod/v4';
+import * as z from 'zod';
 
 export const createNoteInputSchema = z.object({
   title: z.string().min(1).max(255),

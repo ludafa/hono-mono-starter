@@ -1,2 +1,3 @@
-export { getApiNotes } from './getApiNotes.ts';
-export { postApiNotes } from './postApiNotes.ts';
+export { getApiNotes } from './getApiNotes';
+export { getApiTicks } from './getApiTicks';
+export { postApiNotes } from './postApiNotes';

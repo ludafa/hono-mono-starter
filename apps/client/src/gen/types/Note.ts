@@ -4,20 +4,8 @@
  */
 
 export type Note = {
-  /**
-   * @type string
-   */
   id: string;
-  /**
-   * @type string
-   */
   title: string;
-  /**
-   * @type string
-   */
   body: string;
-  /**
-   * @type string
-   */
   createdAt: string;
 };

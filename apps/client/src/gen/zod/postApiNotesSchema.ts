@@ -3,26 +3,16 @@
  * Do not edit manually.
  */
 
-import { z } from 'zod/v4';
+import { apiErrorSchema } from './apiErrorSchema';
+import { createNoteInputSchema } from './createNoteInputSchema';
+import { noteSchema } from './noteSchema';
 
-import { apiErrorSchema } from './apiErrorSchema.ts';
-import { createNoteInputSchema } from './createNoteInputSchema.ts';
-import { noteSchema } from './noteSchema.ts';
+export const postApiNotesStatus201Schema = noteSchema;
 
-/**
- * @description Created
- */
-export const postApiNotes201Schema = z.lazy(() => noteSchema);
+export const postApiNotesStatus401Schema = apiErrorSchema;
 
-/**
- * @description Unauthorized
- */
-export const postApiNotes401Schema = z.lazy(() => apiErrorSchema);
+export const postApiNotesResponseSchema = postApiNotesStatus201Schema;
 
-export const postApiNotesMutationRequestSchema = z.lazy(
-  () => createNoteInputSchema,
-);
+export const postApiNotesErrorSchema = postApiNotesStatus401Schema;
 
-export const postApiNotesMutationResponseSchema = z.lazy(
-  () => postApiNotes201Schema,
-);
+export const postApiNotesBodySchema = createNoteInputSchema;

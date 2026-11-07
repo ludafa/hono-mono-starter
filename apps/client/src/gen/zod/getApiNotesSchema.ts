@@ -3,21 +3,15 @@
  * Do not edit manually.
  */
 
-import { z } from 'zod/v4';
+import * as z from 'zod';
 
-import { apiErrorSchema } from './apiErrorSchema.ts';
-import { noteSchema } from './noteSchema.ts';
+import { apiErrorSchema } from './apiErrorSchema';
+import { noteSchema } from './noteSchema';
 
-/**
- * @description Notes
- */
-export const getApiNotes200Schema = z.array(z.lazy(() => noteSchema));
+export const getApiNotesStatus200Schema = z.array(noteSchema);
 
-/**
- * @description Unauthorized
- */
-export const getApiNotes401Schema = z.lazy(() => apiErrorSchema);
+export const getApiNotesStatus401Schema = apiErrorSchema;
 
-export const getApiNotesQueryResponseSchema = z.lazy(
-  () => getApiNotes200Schema,
-);
+export const getApiNotesResponseSchema = getApiNotesStatus200Schema;
+
+export const getApiNotesErrorSchema = getApiNotesStatus401Schema;

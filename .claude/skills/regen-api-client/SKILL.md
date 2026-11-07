@@ -25,7 +25,8 @@ The server's OpenAPI document is the contract. After touching server routes or n
 
    Kubb reads `../server/openapi.yml` and writes:
    - `apps/client/src/gen/types/` — TypeScript types per operation/schema
-   - `apps/client/src/gen/clients/` — `fetch`-based client functions
+   - `apps/client/src/gen/clients/` — `fetch`-based client functions (`@kubb/plugin-fetch`)
+   - `apps/client/src/gen/.kubb/` — the fetch runtime those functions import (`client`, `ResponseError`, SSE parsing); copied in on every run. App code imports these through the `@/gen` barrel, not from `.kubb/` directly
    - `apps/client/src/gen/zod/` — runtime Zod schemas
 
 3. **Sanity check:** `pnpm typecheck`. New endpoints should appear as exports in `apps/client/src/gen/clients/index.ts`. If a function you expected is missing, double-check that the server route actually went through `createRoute` + `app.openapi(...)`, not `app.get/post(...)`.

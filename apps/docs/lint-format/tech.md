@@ -124,7 +124,7 @@ oxfmt "$@"
 - 写在 `apps/client/**` override 里：`sortTailwindcss: { "stylesheet": "./apps/client/src/main.css", "functions": ["cn", "cva"] }`。路径相对配置文件。
 - 指定 Tailwind v4 的 CSS 入口后，oxfmt 才认识 `bg-background`、`text-muted-foreground` 这些自定义 token。原来的 `prettier-plugin-tailwindcss` 没配 stylesheet，把它们当成未知 class 排到最前；切换时 class 顺序大面积变化，新顺序才是对的。
 
-## 5. 生成文件（2026-10-21）
+## 5. 生成文件（2026-10-21，2026-11-04 修订）
 
 | 生成物                             | oxlint | oxfmt      | 说明                         |
 | ---------------------------------- | ------ | ---------- | ---------------------------- |
@@ -135,8 +135,9 @@ oxfmt "$@"
 | `apps/client/src/gen/**`（Kubb）   | 忽略   | **格式化** | 见下                         |
 
 - Kubb 的 `output.format` 默认是 `'prettier'`：生成后对 `src/gen` 跑 `prettier --write`。删掉 Prettier 后这一步静默跳过，重新生成的客户端没有分号、长行不折行、文件末尾没有换行，已提交的生成文件会出现大片 diff（2026-10-21 做 TS 7 调研时发现，计划外）。
-- 修法：`apps/client/kubb.config.ts` 设 `format: 'oxfmt'`（Kubb 4.39 原生支持）。同时 `.oxfmtrc.json` **不能**忽略 `src/gen/**`：oxfmt 会跳过被忽略的路径，即使是命令行显式传进来的，那样 Kubb 这一步又成了空操作。
-- Kubb 的 `output.lint` 默认 `'auto'`，会探测到 oxlint，对 `src/gen` 跑 `oxlint --fix`。`src/gen` 在 oxlint 的忽略列表里，所以这一步是空操作，生成代码不会被 `curly` 之类的规则改动（实测）。
+- 修法：`apps/client/kubb.config.ts` 设 `format: 'oxfmt'`（Kubb 4.39 起原生支持，5 也支持）。同时 `.oxfmtrc.json` **不能**忽略 `src/gen/**`：oxfmt 会跳过被忽略的路径，即使是命令行显式传进来的，那样 Kubb 这一步又成了空操作。
+- Kubb 不对生成代码跑 lint：Kubb 5 的 `output.lint` 默认是 `false`，配置里也没开。`src/gen` 在 oxlint 的忽略列表里，生成代码不会被 `curly` 之类的规则改动。Kubb 5 还会生成点开头的 `src/gen/.kubb/`（[toolchain tech.md §5.4](../toolchain/tech.md#54-生成物和调用方式的变化)），Kubb 自己跑的 oxfmt 会格式化它（实测）。
+  > 2026-10-21 → 2026-11-04 修订：原来（Kubb 4.39）`output.lint` 默认 `'auto'`，会探测到 oxlint 并对 `src/gen` 跑 `oxlint --fix`，因为忽略列表而成了空操作（实测）。升到 Kubb 5 后默认不跑了。
 - 新增生成物时，按上表决定加进哪份配置的 `ignorePatterns`。
 
 ## 6. 编辑器与 Claude Code（2026-10-21，2026-10-22 修订）

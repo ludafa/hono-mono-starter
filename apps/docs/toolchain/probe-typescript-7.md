@@ -42,6 +42,8 @@
 | `@kubb/fabric-core`、`@kubb/plugin-ts` | 自己的 dependency `typescript@5.9.3` | 无，和我们装的版本隔离                                                                                                                                      |
 | `cosmiconfig@9.0.1`                    | 可选 peer，解析到我们装的版本        | 只在用默认 loader 加载 `.ts` 配置时才 `require`。Kubb 给 `.ts` 注册了自己的 jiti loader；commitlint 的配置是 `.js`；shadcn 只读 `components.json`。都走不到 |
 
+> 2026-11-04 补充：升到 Kubb 5 后，`@kubb/plugin-ts` 运行时不再 `import 'typescript'`，上表第一行已经不成立，结论不变，见 [tech.md §5.2](tech.md#52-包的变化)。
+
 另外声明了 typescript 依赖的：`msw`（可选 peer，只用类型）、`cosmiconfig-typescript-loader`（commitlint 用，只处理 `.ts` 配置）。
 
 ### 3.3 tsconfig

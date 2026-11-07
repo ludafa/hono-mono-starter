@@ -3,40 +3,29 @@
  * Do not edit manually.
  */
 
-import fetch from '@kubb/plugin-client/clients/fetch';
+import type { Options, UnwrappedResult } from '../.kubb/client';
+import { client, unwrapResult } from '../.kubb/client';
 import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from '@kubb/plugin-client/clients/fetch';
-
-import type {
-  GetApiNotesQueryResponse,
-  GetApiNotes401,
-} from '../types/GetApiNotes.ts';
-
-function getGetApiNotesUrl() {
-  const res = { method: 'GET', url: `/api/notes` as const };
-  return res;
-}
+  GetApiNotesOptions,
+  GetApiNotesResponses,
+} from '../types/GetApiNotes';
 
 /**
  * @summary List the current user’s notes
  * {@link /api/notes}
  */
-export async function getApiNotes(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config;
+export function getApiNotes<ThrowOnError extends boolean = true>(
+  options: Options<GetApiNotesOptions, ThrowOnError> = {},
+): Promise<UnwrappedResult<GetApiNotesResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options;
 
-  const res = await request<
-    GetApiNotesQueryResponse,
-    ResponseErrorConfig<GetApiNotes401>,
-    unknown
-  >({
-    method: 'GET',
-    url: getGetApiNotesUrl().url.toString(),
-    ...requestConfig,
-  });
-  return res.data;
+  return unwrapResult(
+    request({
+      method: 'GET',
+      url: '/api/notes',
+      ...config,
+      throwOnError: config.throwOnError ?? true,
+    }),
+    config.throwOnError ?? true,
+  ) as Promise<UnwrappedResult<GetApiNotesResponses, ThrowOnError>>;
 }

@@ -3,26 +3,29 @@
  * Do not edit manually.
  */
 
-import type { ApiError } from './ApiError.ts';
-import type { CreateNoteInput } from './CreateNoteInput.ts';
-import type { Note } from './Note.ts';
+import type { ApiError } from './ApiError';
+import type { CreateNoteInput } from './CreateNoteInput';
+import type { Note } from './Note';
 
-/**
- * @description Created
- */
-export type PostApiNotes201 = Note;
+export type PostApiNotesStatus201 = Note;
 
-/**
- * @description Unauthorized
- */
-export type PostApiNotes401 = ApiError;
+export type PostApiNotesStatus401 = ApiError;
 
-export type PostApiNotesMutationRequest = CreateNoteInput;
+export type PostApiNotesBody = CreateNoteInput;
 
-export type PostApiNotesMutationResponse = PostApiNotes201;
-
-export type PostApiNotesMutation = {
-  Response: PostApiNotes201;
-  Request: PostApiNotesMutationRequest;
-  Errors: PostApiNotes401;
+export type PostApiNotesOptions = {
+  body: PostApiNotesBody;
+  path?: never;
+  query?: never;
+  headers?: never;
 };
+
+export type PostApiNotesResponses = {
+  '201': PostApiNotesStatus201;
+  '401': PostApiNotesStatus401;
+};
+
+/**
+ * @description Union of all possible responses
+ */
+export type PostApiNotesResponse = PostApiNotesStatus201;

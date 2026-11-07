@@ -3,22 +3,26 @@
  * Do not edit manually.
  */
 
-import type { ApiError } from './ApiError.ts';
-import type { Note } from './Note.ts';
+import type { ApiError } from './ApiError';
+import type { Note } from './Note';
 
-/**
- * @description Notes
- */
-export type GetApiNotes200 = Note[];
+export type GetApiNotesStatus200 = Note[];
 
-/**
- * @description Unauthorized
- */
-export type GetApiNotes401 = ApiError;
+export type GetApiNotesStatus401 = ApiError;
 
-export type GetApiNotesQueryResponse = GetApiNotes200;
-
-export type GetApiNotesQuery = {
-  Response: GetApiNotes200;
-  Errors: GetApiNotes401;
+export type GetApiNotesOptions = {
+  body?: never;
+  path?: never;
+  query?: never;
+  headers?: never;
 };
+
+export type GetApiNotesResponses = {
+  '200': GetApiNotesStatus200;
+  '401': GetApiNotesStatus401;
+};
+
+/**
+ * @description Union of all possible responses
+ */
+export type GetApiNotesResponse = GetApiNotesStatus200;

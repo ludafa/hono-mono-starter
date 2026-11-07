@@ -33,7 +33,7 @@ Endpoints are defined with `createRoute` from `@hono/zod-openapi`, registered wi
 
 8. **Typecheck:** `pnpm typecheck`. New client functions in `apps/client/src/gen/clients/` and types in `apps/client/src/gen/types/` should now exist.
 
-9. **(Optional) Use it in a page** by importing from `'@/gen/clients'` (or relative path).
+9. **(Optional) Use it in a page** by importing from `'@/gen/clients'` (or relative path). Calls take grouped options: `postApiNotes({ body: { … } })`, `getFoo({ path: { id }, query: { … } })`. Non-2xx responses throw `ResponseError`: wrap calls in `try/catch` and show `errorMessage(err)` from `@/lib/api` (see `apps/docs/toolchain/tech.md` §5.7). For a streaming (`text/event-stream`) route, see §5.5.
 
 ## Conventions
 

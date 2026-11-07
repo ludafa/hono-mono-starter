@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 
+import { TickStream } from '@/components/tick-stream';
 import { Button } from '@/components/ui/button';
+import { errorMessage } from '@/lib/api';
 
 import { getApiNotes, postApiNotes } from '../gen/clients';
 import type { Note } from '../gen/types';
@@ -10,11 +12,13 @@ export function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [loadError, setLoadError] = useState<string>();
+  const [createError, setCreateError] = useState<string>();
 
   useEffect(() => {
     getApiNotes()
       .then(setNotes)
-      .catch(() => {})
+      .catch(async (err: unknown) => setLoadError(await errorMessage(err)))
       .finally(() => setLoading(false));
   }, []);
 
@@ -23,10 +27,15 @@ export function DashboardPage() {
     if (!title.trim()) {
       return;
     }
-    const note = await postApiNotes({ title, body });
-    setNotes((prev) => [...prev, note]);
-    setTitle('');
-    setBody('');
+    setCreateError(undefined);
+    try {
+      const note = await postApiNotes({ body: { title, body } });
+      setNotes((prev) => [...prev, note]);
+      setTitle('');
+      setBody('');
+    } catch (err) {
+      setCreateError(await errorMessage(err));
+    }
   }
 
   return (
@@ -58,6 +67,13 @@ export function DashboardPage() {
               </li>
             ))}
           </ul>
+        ) : loadError ? (
+          <div className="flex flex-col items-start gap-2 rounded-2xl border border-dashed border-destructive/30 px-6 py-10">
+            <p className="font-display text-2xl leading-tight italic">
+              Couldn’t load notes.
+            </p>
+            <p className="text-sm text-destructive">{loadError}</p>
+          </div>
         ) : notes.length === 0 ? (
           <div className="flex flex-col items-start gap-2 rounded-2xl border border-dashed border-foreground/10 px-6 py-10 text-muted-foreground">
             <p className="font-display text-2xl leading-tight text-foreground italic">
@@ -87,7 +103,7 @@ export function DashboardPage() {
         )}
       </section>
 
-      <aside className="md:sticky md:top-24 md:self-start">
+      <aside className="flex flex-col gap-6 md:sticky md:top-24 md:self-start">
         <form
           onSubmit={handleCreate}
           className="group flex flex-col gap-4 rounded-2xl border border-foreground/10 bg-card/70 p-5 backdrop-blur-sm transition-colors hover:border-foreground/15"
@@ -114,6 +130,9 @@ export function DashboardPage() {
             rows={3}
             className="w-full resize-none border-0 border-b border-foreground/15 bg-transparent py-2 text-sm leading-relaxed transition-colors focus:border-foreground focus:ring-0 focus:outline-none"
           />
+          {createError && (
+            <p className="text-xs text-destructive">{createError}</p>
+          )}
           <Button
             type="submit"
             size="sm"
@@ -123,6 +142,7 @@ export function DashboardPage() {
             Add note
           </Button>
         </form>
+        <TickStream />
       </aside>
     </div>
   );

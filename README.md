@@ -43,7 +43,8 @@ apps/
 │   │   ├── middleware/auth.ts requireAuth (session → c.set('userId'))
 │   │   ├── routes/
 │   │   │   ├── auth.ts        mounts better-auth handler at /api/auth/*
-│   │   │   └── example.ts     reference CRUD; replace with your domain
+│   │   │   ├── example.ts     reference CRUD; replace with your domain
+│   │   │   └── ticks.ts       reference SSE stream (GET /api/ticks)
 │   │   └── schemas/api.ts     ErrorSchema, PaginationSchema (shared)
 │   ├── scripts/generate-openapi.ts
 │   ├── drizzle.config.ts      SQLite-only, points at db/schema.ts
@@ -62,7 +63,8 @@ apps/
     │   ├── layouts/           AppLayout, AuthLayout
     │   ├── components/
     │   │   ├── ui/            shadcn primitives
-    │   │   └── theme-toggle.tsx
+    │   │   ├── theme-toggle.tsx
+    │   │   └── tick-stream.tsx  Live stream card: reads GET /api/ticks with for await
     │   ├── lib/
     │   │   ├── api.ts         Kubb fetch client config (baseURL, credentials)
     │   │   ├── auth-client.ts better-auth React client

@@ -4,6 +4,7 @@ import { cors } from 'hono/cors';
 
 import { authApp } from './routes/auth.js';
 import { exampleApp } from './routes/example.js';
+import { ticksApp } from './routes/ticks.js';
 
 const app = new OpenAPIHono();
 
@@ -25,6 +26,7 @@ app.use(
 // Mount routes
 app.route('/', authApp);
 app.route('/', exampleApp);
+app.route('/', ticksApp);
 
 // OpenAPI spec + Swagger UI
 app.doc31('/doc', {

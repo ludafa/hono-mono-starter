@@ -3,47 +3,30 @@
  * Do not edit manually.
  */
 
-import fetch from '@kubb/plugin-client/clients/fetch';
+import type { Options, UnwrappedResult } from '../.kubb/client';
+import { client, unwrapResult } from '../.kubb/client';
 import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from '@kubb/plugin-client/clients/fetch';
-
-import type {
-  PostApiNotesMutationRequest,
-  PostApiNotesMutationResponse,
-  PostApiNotes401,
-} from '../types/PostApiNotes.ts';
-
-function getPostApiNotesUrl() {
-  const res = { method: 'POST', url: `/api/notes` as const };
-  return res;
-}
+  PostApiNotesOptions,
+  PostApiNotesResponses,
+} from '../types/PostApiNotes';
 
 /**
  * @summary Create a note
  * {@link /api/notes}
  */
-export async function postApiNotes(
-  data: PostApiNotesMutationRequest,
-  config: Partial<RequestConfig<PostApiNotesMutationRequest>> & {
-    client?: Client;
-  } = {},
-) {
-  const { client: request = fetch, ...requestConfig } = config;
+export function postApiNotes<ThrowOnError extends boolean = true>(
+  options: Options<PostApiNotesOptions, ThrowOnError>,
+): Promise<UnwrappedResult<PostApiNotesResponses, ThrowOnError>> {
+  const { client: request = client, ...config } = options;
 
-  const requestData = data;
-
-  const res = await request<
-    PostApiNotesMutationResponse,
-    ResponseErrorConfig<PostApiNotes401>,
-    PostApiNotesMutationRequest
-  >({
-    method: 'POST',
-    url: getPostApiNotesUrl().url.toString(),
-    data: requestData,
-    ...requestConfig,
-  });
-  return res.data;
+  return unwrapResult(
+    request({
+      method: 'POST',
+      url: '/api/notes',
+      contentType: { request: 'application/json' },
+      ...config,
+      throwOnError: config.throwOnError ?? true,
+    }),
+    config.throwOnError ?? true,
+  ) as Promise<UnwrappedResult<PostApiNotesResponses, ThrowOnError>>;
 }

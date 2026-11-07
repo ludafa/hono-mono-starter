@@ -3,8 +3,11 @@
  * Do not edit manually.
  */
 
-import { z } from 'zod/v4';
+import * as z from 'zod';
 
 export const apiErrorSchema = z.object({
-  error: z.string().describe('Error message'),
+  error: z
+    .string()
+    .describe('Error message')
+    .meta({ examples: ['Not found'] }),
 });

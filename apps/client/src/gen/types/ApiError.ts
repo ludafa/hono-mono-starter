@@ -6,6 +6,7 @@
 export type ApiError = {
   /**
    * @description Error message
+   * @example Not found
    * @type string
    */
   error: string;
